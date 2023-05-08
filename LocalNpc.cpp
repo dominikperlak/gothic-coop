@@ -20,6 +20,7 @@ namespace GOTHIC_ENGINE {
         int lastSyncMaxHp;
         int lastProtections[8];
         int lastTalents[4];
+        int lastBodyState;
         zSTRING lastSpellInstanceName = "NULL";
         zSTRING lastWeapon1Name;
         zSTRING lastWeapon2Name;
@@ -42,6 +43,7 @@ namespace GOTHIC_ENGINE {
             hasModel = npc && npc->GetModel() && npc->vobLeafList.GetNum() > 0;
  
             this->SyncInitialization();
+            this->SyncBodystate();
             this->SyncPosition();
             this->SyncAngle();
             this->SyncAnimation();
@@ -50,6 +52,7 @@ namespace GOTHIC_ENGINE {
             this->SyncSpellCasts();
             this->SyncMagicSetup();
             this->SyncHp();
+            
 
             if (npc == player) {
                 this->SyncArmor();
@@ -74,6 +77,7 @@ namespace GOTHIC_ENGINE {
             lastWeaponMode = 0;
             lastSyncHp = -1;
             lastSyncMaxHp = 0;
+            lastBodyState = 0;
             lastWeapon1Name = zSTRING();
             lastWeapon2Name = zSTRING();
             lastArmorName = zSTRING();
@@ -216,6 +220,17 @@ namespace GOTHIC_ENGINE {
 
         }
 
+        void SyncBodystate() {
+
+            auto bs = npc->GetBodyState();
+
+            if (bs != lastBodyState)
+            {
+                addUpdate(SYNC_BODYSTATE);
+
+                lastBodyState = bs;
+            }
+        }
         void SyncHp() {
             auto currentHp = npc->GetAttribute(NPC_ATR_HITPOINTS);
             auto currentMaxHp = npc->GetAttribute(NPC_ATR_HITPOINTSMAX);
@@ -399,6 +414,10 @@ namespace GOTHIC_ENGINE {
                     j["hp"] = lastSyncHp;
                     j["hp_max"] = lastSyncMaxHp;
                     break;
+                }
+                case SYNC_BODYSTATE:
+                {
+                    j["bs"] = lastBodyState;
                 }
                 case SYNC_PROTECTIONS:
                 {
