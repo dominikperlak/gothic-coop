@@ -5,12 +5,6 @@ namespace GOTHIC_ENGINE {
         CoopLog << l;
     }
 
-    void CoopLog(boost::stacktrace::stacktrace l)
-    {
-        std::ofstream CoopLog(GothicCoopLogPath, std::ios_base::app | std::ios_base::out);
-        CoopLog << l;
-    }
-
     void ChatLog(string text, zCOLOR color = zCOLOR(255, 255, 255, 255)) {
         GameChat->AddLine(text, color);
     };

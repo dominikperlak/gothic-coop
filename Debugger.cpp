@@ -37,8 +37,6 @@ namespace GOTHIC_ENGINE {
     void SaveErrorDetails() {
         TrackLastExecutedFunctions = false;
 
-        CoopLog("============ EXCEPTION ===========\r");
-        CoopLog(boost::current_exception_diagnostic_information());
         CoopLog("State:\r");
         CoopLog(PluginState);
         CoopLog("\r");
@@ -47,12 +45,6 @@ namespace GOTHIC_ENGINE {
             CoopLog(data);
             CoopLog("\r");
         }
-        CoopLog("\r");
-        auto t = std::time(nullptr);
-        auto tm = *std::localtime(&t);
-        std::ostringstream oss;
-        oss << std::put_time(&tm, "%d-%m-%Y %H:%M:%S");
-        CoopLog(oss.str());
         CoopLog("\r");
 
         HANDLE process;

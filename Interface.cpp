@@ -5,8 +5,6 @@
 #include <vector>
 #include <enet/enet.h>
 #include <nlohmann/json.hpp>
-#include <boost/exception/diagnostic_information.hpp> 
-#include <boost/stacktrace.hpp>
 #include <intrin.h>
 #include <DbgHelp.h>
 #include <ctime>
