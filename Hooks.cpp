@@ -161,16 +161,24 @@ namespace GOTHIC_ENGINE {
     CInvoke<int(__thiscall*)(oCAIHuman*)> Ivk_oCAIHuman_StandActions(0x00612840, &oCAIHuman_StandActions);
 #endif
     int __fastcall oCAIHuman_StandActions(oCAIHuman* _this, void* vtable) {
+        if (ServerThread) {
+            Ivk_oCAIHuman_StandActions(_this);
+            return;
+        }
+
         if (_this->npc != player) {
             return Ivk_oCAIHuman_StandActions(_this);
         }
+
         auto focusedNpc = player->GetFocusNpc();
         if (!focusedNpc) {
             return Ivk_oCAIHuman_StandActions(_this);
         }
+
         if (IsCoopPlayer(focusedNpc->GetObjectName())) {
             return 0;
         }
+
         if (focusedNpc->IsDead() || focusedNpc->IsUnconscious() || focusedNpc->GetWeaponMode() != NPC_WEAPON_NONE) {
             return Ivk_oCAIHuman_StandActions(_this);
         }
