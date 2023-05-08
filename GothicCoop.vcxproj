@@ -690,7 +690,7 @@ xcopy /y /d  "$(ProjectDir)bin\*.dll" "D:\Program Files (x86)\Steam\steamapps\co
       <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(ProjectDir)bin\*.dll" "D:\Program Files (x86)\Steam\steamapps\common\Gothic II\system\Autorun"</Command>
+      <Command>xcopy /y /d  "$(ProjectDir)bin\*.dll" "K:\Games\Gothic 2\System\Autorun"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='G2A MT Release|Win32'">
