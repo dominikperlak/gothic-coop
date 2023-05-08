@@ -162,8 +162,7 @@ namespace GOTHIC_ENGINE {
 #endif
     int __fastcall oCAIHuman_StandActions(oCAIHuman* _this, void* vtable) {
         if (ServerThread) {
-            Ivk_oCAIHuman_StandActions(_this);
-            return;
+            return Ivk_oCAIHuman_StandActions(_this);
         }
 
         if (_this->npc != player) {
