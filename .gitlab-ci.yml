@@ -1,0 +1,72 @@
+stages:
+ - build
+ - release
+
+build:gothic1:
+  stage: build
+  tags:
+  - windows
+  when: manual
+  before_script:
+    - choco install -y visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86"
+    - function loadenv() { foreach($line in Get-Content $args[0]) { if($line -match "^(.*?)=(.*)$") { Set-Content "env:\$($matches[1])" $matches[2] } } };
+  script:
+    - cmd /c " `"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars32.bat`" && set > `"vs.env`" "
+    - loadenv vs.env
+    - msbuild GothicCoop.vcxproj /property:Configuration="G1 Debug"
+    - cp Bin/$CI_PROJECT_TITLE.*.dll ./
+  after_script:
+    - $env = "GOTHIC1_JOB_ID=$CI_JOB_ID" -replace "-", "_"
+    - Add-Content -Path job.env -Value $env
+  artifacts:
+    name: $CI_PROJECT_TITLE
+    paths:
+    - $CI_PROJECT_TITLE.*.dll
+    expire_in: never
+    reports:
+       dotenv: job.env
+       
+build:gothic2notr:
+  stage: build
+  tags:
+  - windows
+  when: manual
+  before_script:
+    - choco install -y visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86"
+    - function loadenv() { foreach($line in Get-Content $args[0]) { if($line -match "^(.*?)=(.*)$") { Set-Content "env:\$($matches[1])" $matches[2] } } };
+  script:
+    - cmd /c " `"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars32.bat`" && set > `"vs.env`" "
+    - loadenv vs.env
+    - msbuild GothicCoop.vcxproj /property:Configuration="G2A Debug"
+    - cp Bin/$CI_PROJECT_TITLE.*.dll ./
+  after_script:
+    - $env = "GOTHIC2_NOTR_JOB_ID=$CI_JOB_ID" -replace "-", "_"
+    - Add-Content -Path job.env -Value $env
+  artifacts:
+    name: $CI_PROJECT_TITLE
+    paths:
+    - $CI_PROJECT_TITLE.*.dll
+    expire_in: never
+    reports:
+       dotenv: job.env
+    
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  when: manual
+  needs: [build:gothic1, build:gothic2notr]
+  variables:
+    TAG: '0.1'
+  script:
+    - echo "Create Release $TAG"
+  release:
+    tag_name: '$TAG'
+    description: "./CHANGELOG.md"
+    assets:
+      links:
+        - name: "$CI_PROJECT_TITLE.dll"
+          url: "$CI_PROJECT_URL/-/jobs/$GOTHIC1_JOB_ID/artifacts/download"
+          link_type: "package"
+        - name: "$CI_PROJECT_TITLE.dll"
+          url: "$CI_PROJECT_URL/-/jobs/$GOTHIC2_NOTR_JOB_ID/artifacts/download"
+          link_type: "package"
