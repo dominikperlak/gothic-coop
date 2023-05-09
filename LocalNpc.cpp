@@ -118,7 +118,7 @@ namespace GOTHIC_ENGINE {
                 GetDistance3D(playerPos.n[0], playerPos.n[1], playerPos.n[2], lastPosition.n[0], lastPosition.n[1], lastPosition.n[2]) :
                 999;
 
-            if (dist > 5)
+            if (dist > 5 || (npc->IsAPlayer() && dist >= 3))
             {
                 addUpdate(SYNC_POS);
                 lastPosition = playerPos;
