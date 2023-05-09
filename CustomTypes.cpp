@@ -20,7 +20,8 @@ namespace GOTHIC_ENGINE {
         SYNC_PLAYER_NAME,
         PLAYER_DISCONNECT,
         SYNC_TALENTS,
-        SYNC_BODYSTATE
+        SYNC_BODYSTATE,
+        SYNC_OVERLAYS
     };
 
     struct PlayerHit

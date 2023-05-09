@@ -76,7 +76,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		cmd << "GetMdsIndex invalid " << mds << endl;
+		//cmd << "GetMdsIndex invalid " << mds << endl;
 
 		return -1;
 	}
@@ -141,11 +141,30 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	// возвращает 1, если оверлеи равны, иначе 0
 	int oCNpc::CompareOverlaysMds(oCNpc* npc) {
 		if (!npc) return 0;
 		zCArray<int> npcMdsList = GetNpcMds(npc);
 		zCArray<int> npcMdsListMy = GetNpcMds(this);
+		if (npcMdsListMy.GetNumInList() != npcMdsList.GetNumInList()) {
+			return 0;
+		}
+		else {
+			for (int i = 0; i < npcMdsListMy.GetNumInList(); i++) {
+				int mdsMy = npcMdsListMy.GetSafe(i);
+				if (!npcMdsList.IsInList(mdsMy)) {
+					return 0;
+				}
+			}
+		}
+
+
+		return 1;
+	}
+
+	int oCNpc::CompareOverlaysArray(zCArray<int> npcMdsList) {
+
+		zCArray<int> npcMdsListMy = GetNpcMds(this);
+
 		if (npcMdsListMy.GetNumInList() != npcMdsList.GetNumInList()) {
 			return 0;
 		}

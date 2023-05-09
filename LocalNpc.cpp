@@ -12,7 +12,7 @@ namespace GOTHIC_ENGINE {
         std::list<SpellCast> spellCastsToSync;
         std::vector<int> newAnimIds;
         zCModelAni* lastAnimation;
-
+        zCArray<int> pArrOverlays;
         zVEC3 lastPosition;
         float lastHeading = 0;
         int lastWeaponMode;
@@ -46,6 +46,7 @@ namespace GOTHIC_ENGINE {
             this->SyncBodystate();
             this->SyncPosition();
             this->SyncAngle();
+            this->SyncOverlays();
             this->SyncAnimation();
             this->SyncWeaponMode();
             this->SyncAttacks();
@@ -96,7 +97,8 @@ namespace GOTHIC_ENGINE {
             lastTalents[0] = 0;
             lastTalents[1] = 0;
             lastTalents[2] = 0;
-            lastTalents[3] = 0;             
+            lastTalents[3] = 0;
+            pArrOverlays.DeleteList();
             
             if (lastAnimation) {
                 newAnimIds.push_back(lastAnimation->aniID);
@@ -118,7 +120,7 @@ namespace GOTHIC_ENGINE {
                 GetDistance3D(playerPos.n[0], playerPos.n[1], playerPos.n[2], lastPosition.n[0], lastPosition.n[1], lastPosition.n[2]) :
                 999;
 
-            if (dist > 5 || (npc->IsAPlayer() && dist >= 3))
+            if (dist > 5)
             {
                 addUpdate(SYNC_POS);
                 lastPosition = playerPos;
@@ -231,6 +233,16 @@ namespace GOTHIC_ENGINE {
                 lastBodyState = bs;
             }
         }
+
+        void SyncOverlays() {
+
+            if (!npc->CompareOverlaysArray(pArrOverlays))
+            {
+                addUpdate(SYNC_OVERLAYS);
+                pArrOverlays = GetNpcMds(npc);
+            }
+        }
+
         void SyncHp() {
             auto currentHp = npc->GetAttribute(NPC_ATR_HITPOINTS);
             auto currentMaxHp = npc->GetAttribute(NPC_ATR_HITPOINTSMAX);
@@ -418,6 +430,19 @@ namespace GOTHIC_ENGINE {
                 case SYNC_BODYSTATE:
                 {
                     j["bs"] = lastBodyState;
+                }
+                case SYNC_OVERLAYS:
+                {
+                    auto overlays = nlohmann::json::array();
+
+                    for (int i = 0; i < pArrOverlays.GetNumInList(); i++)
+                    {
+                        nlohmann::json overlay;
+                        overlay["over"] = pArrOverlays.GetSafe(i);
+                        overlays.push_back(overlay);
+                    }
+    
+                    j["overlays"] = overlays;
                 }
                 case SYNC_PROTECTIONS:
                 {

@@ -142,6 +142,11 @@ namespace GOTHIC_ENGINE {
                     UpdateBodystate(update);
                     break;
                 }
+                case SYNC_OVERLAYS:
+                {
+                    UpdateOverlays(update);
+                    break;
+                }
                 }
             }
 
@@ -285,12 +290,30 @@ namespace GOTHIC_ENGINE {
             }
         }
 
-        void UpdateBodystate(json update)
-        {
+        void UpdateBodystate(json update) {
             if (hasNpc) {
                 auto bs = update["bs"].get<int>();
 
                 npc->SetBodyState(bs);
+            }
+        }
+
+        void UpdateOverlays(json update) {
+            if (hasNpc) {
+
+                std::vector<json> overlays = update["overlays"];
+                zCArray<int> overlaysNew;
+
+                for each (auto a in overlays) {
+                    auto overlayId = a["over"].get<int>();
+
+                    overlaysNew.InsertEnd(overlayId);
+                }
+
+                if (!npc->CompareOverlaysArray(overlaysNew))
+                {
+                    npc->ApplyOverlaysArray(overlaysNew);
+                }
             }
         }
 
@@ -607,9 +630,6 @@ namespace GOTHIC_ENGINE {
         // creates smoothness for npcs' changing position
         void SetNewNpcPosition()
         {
-            
-            
-            
             bool inMove = npc->isInMovementMode;
             if (inMove) {
 #if ENGINE >= Engine_G2
