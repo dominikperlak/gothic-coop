@@ -1030,6 +1030,10 @@ xcopy /y /d  "$(ProjectDir)bin\*.dll" "D:\Program Files (x86)\Steam\steamapps\co
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Utils.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="VisibleNpcsUpdater.cpp">
       <SubType>
       </SubType>

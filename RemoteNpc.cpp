@@ -603,23 +603,11 @@ namespace GOTHIC_ENGINE {
             }
         }
 
-        // interpolation for translation
-        zVEC3 Lerp(zVEC3 a, zVEC3 b, float t)
-        {
-            return a + (b - a) * t;
-        }
-
-        void zClamp(float& value, float bl, float bh) {
-            if (value < bl)
-                value = bl;
-            else if (value > bh)
-                value = bh;
-        }
-
+        
         // creates smoothness for npcs' changing position
         void SetNewNpcPosition()
         {
-            /*
+            
             
             
             bool inMove = npc->isInMovementMode;
@@ -632,13 +620,16 @@ namespace GOTHIC_ENGINE {
             }
 
             npc->SetCollDet(FALSE);
-            npc->SetPositionWorld(*lastPositionFromServer);
+
+            auto lerpPos = Lerp(npc->GetPositionWorld(), *lastPositionFromServer, 0.5f);
+            npc->SetPositionWorld(lerpPos);
             npc->SetCollDet(TRUE);
 
             if (inMove) {
                 npc->BeginMovement();
             }
-            */
+            
+            return; // for now
 
 
             zVEC3 newPos = *lastPositionFromServer;
