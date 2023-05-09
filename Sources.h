@@ -6,6 +6,7 @@
 #include "SafeQueue.cpp"
 #include "CustomTypes.cpp"
 #include "Chat.cpp"
+#include "Utils.cpp"
 #include "Global.cpp"
 #include "Helpers.cpp"
 #include "Debugger.cpp"

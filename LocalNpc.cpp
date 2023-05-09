@@ -12,7 +12,7 @@ namespace GOTHIC_ENGINE {
         std::list<SpellCast> spellCastsToSync;
         std::vector<int> newAnimIds;
         zCModelAni* lastAnimation;
-
+        zCArray<int> pArrOverlays;
         zVEC3 lastPosition;
         float lastHeading = 0;
         int lastWeaponMode;
@@ -20,6 +20,7 @@ namespace GOTHIC_ENGINE {
         int lastSyncMaxHp;
         int lastProtections[8];
         int lastTalents[4];
+        int lastBodyState;
         zSTRING lastSpellInstanceName = "NULL";
         zSTRING lastWeapon1Name;
         zSTRING lastWeapon2Name;
@@ -42,14 +43,17 @@ namespace GOTHIC_ENGINE {
             hasModel = npc && npc->GetModel() && npc->vobLeafList.GetNum() > 0;
  
             this->SyncInitialization();
+            this->SyncBodystate();
             this->SyncPosition();
             this->SyncAngle();
+            this->SyncOverlays();
             this->SyncAnimation();
             this->SyncWeaponMode();
             this->SyncAttacks();
             this->SyncSpellCasts();
             this->SyncMagicSetup();
             this->SyncHp();
+            
 
             if (npc == player) {
                 this->SyncArmor();
@@ -74,6 +78,7 @@ namespace GOTHIC_ENGINE {
             lastWeaponMode = 0;
             lastSyncHp = -1;
             lastSyncMaxHp = 0;
+            lastBodyState = 0;
             lastWeapon1Name = zSTRING();
             lastWeapon2Name = zSTRING();
             lastArmorName = zSTRING();
@@ -92,7 +97,8 @@ namespace GOTHIC_ENGINE {
             lastTalents[0] = 0;
             lastTalents[1] = 0;
             lastTalents[2] = 0;
-            lastTalents[3] = 0;             
+            lastTalents[3] = 0;
+            pArrOverlays.DeleteList();
             
             if (lastAnimation) {
                 newAnimIds.push_back(lastAnimation->aniID);
@@ -214,6 +220,27 @@ namespace GOTHIC_ENGINE {
                 lastWeapon2Name = weapon2Name;
             }
 
+        }
+
+        void SyncBodystate() {
+
+            auto bs = npc->GetBodyState();
+
+            if (bs != lastBodyState)
+            {
+                addUpdate(SYNC_BODYSTATE);
+
+                lastBodyState = bs;
+            }
+        }
+
+        void SyncOverlays() {
+
+            if (!npc->CompareOverlaysArray(pArrOverlays))
+            {
+                addUpdate(SYNC_OVERLAYS);
+                pArrOverlays = GetNpcMds(npc);
+            }
         }
 
         void SyncHp() {
@@ -399,6 +426,23 @@ namespace GOTHIC_ENGINE {
                     j["hp"] = lastSyncHp;
                     j["hp_max"] = lastSyncMaxHp;
                     break;
+                }
+                case SYNC_BODYSTATE:
+                {
+                    j["bs"] = lastBodyState;
+                }
+                case SYNC_OVERLAYS:
+                {
+                    auto overlays = nlohmann::json::array();
+
+                    for (int i = 0; i < pArrOverlays.GetNumInList(); i++)
+                    {
+                        nlohmann::json overlay;
+                        overlay["over"] = pArrOverlays.GetSafe(i);
+                        overlays.push_back(overlay);
+                    }
+    
+                    j["overlays"] = overlays;
                 }
                 case SYNC_PROTECTIONS:
                 {
