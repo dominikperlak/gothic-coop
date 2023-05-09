@@ -391,7 +391,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -419,7 +419,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -449,7 +449,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -478,7 +478,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -506,7 +506,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -536,7 +536,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -568,7 +568,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -600,7 +600,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -632,7 +632,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -664,7 +664,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -696,7 +696,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -731,7 +731,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -763,7 +763,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -795,7 +795,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -827,7 +827,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -859,7 +859,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -892,7 +892,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -927,7 +927,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>$(ProjectDir)\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
