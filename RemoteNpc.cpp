@@ -137,6 +137,11 @@ namespace GOTHIC_ENGINE {
                     DestroyNpc();
                     break;
                 }
+                case SYNC_BODYSTATE:
+                {
+                    UpdateBodystate(update);
+                    break;
+                }
                 }
             }
 
@@ -277,6 +282,15 @@ namespace GOTHIC_ENGINE {
                     }
 
                 }
+            }
+        }
+
+        void UpdateBodystate(json update)
+        {
+            if (hasNpc) {
+                auto bs = update["bs"].get<int>();
+
+                npc->SetBodyState(bs);
             }
         }
 
