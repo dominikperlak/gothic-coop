@@ -13,7 +13,7 @@ build:gothic1:
   script:
     - cmd /c " `"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars32.bat`" && set > `"vs.env`" "
     - loadenv vs.env
-    - msbuild GothicCoop.vcxproj /property:Configuration="G1 Debug"
+    - msbuild GothicCoop.vcxproj /property:Configuration="G1 MD Release" /p:PreBuildEventUseInBuild=False
     - cp Bin/$CI_PROJECT_TITLE.*.dll ./
   after_script:
     - $env = "GOTHIC1_JOB_ID=$CI_JOB_ID" -replace "-", "_"
@@ -37,7 +37,7 @@ build:gothic2notr:
   script:
     - cmd /c " `"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars32.bat`" && set > `"vs.env`" "
     - loadenv vs.env
-    - msbuild GothicCoop.vcxproj /property:Configuration="G2A Debug"
+    - msbuild GothicCoop.vcxproj /property:Configuration="G2A MD Release" /p:PreBuildEventUseInBuild=False
     - cp Bin/$CI_PROJECT_TITLE.*.dll ./
   after_script:
     - $env = "GOTHIC2_NOTR_JOB_ID=$CI_JOB_ID" -replace "-", "_"
