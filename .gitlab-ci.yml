@@ -14,14 +14,14 @@ build:gothic1:
     - cmd /c " `"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars32.bat`" && set > `"vs.env`" "
     - loadenv vs.env
     - msbuild GothicCoop.vcxproj /property:Configuration="G1 MD Release" /p:PreBuildEventUseInBuild=False
-    - cp Bin/$CI_PROJECT_TITLE.*.dll ./
+    - cp Bin/$CI_PROJECT_TITLE.dll ./
   after_script:
     - $env = "GOTHIC1_JOB_ID=$CI_JOB_ID" -replace "-", "_"
     - Add-Content -Path job.env -Value $env
   artifacts:
     name: $CI_PROJECT_TITLE
     paths:
-    - $CI_PROJECT_TITLE.*.dll
+    - $CI_PROJECT_TITLE.dll
     expire_in: never
     reports:
        dotenv: job.env
@@ -38,14 +38,14 @@ build:gothic2notr:
     - cmd /c " `"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars32.bat`" && set > `"vs.env`" "
     - loadenv vs.env
     - msbuild GothicCoop.vcxproj /property:Configuration="G2A MD Release" /p:PreBuildEventUseInBuild=False
-    - cp Bin/$CI_PROJECT_TITLE.*.dll ./
+    - cp Bin/$CI_PROJECT_TITLE.dll ./
   after_script:
     - $env = "GOTHIC2_NOTR_JOB_ID=$CI_JOB_ID" -replace "-", "_"
     - Add-Content -Path job.env -Value $env
   artifacts:
     name: $CI_PROJECT_TITLE
     paths:
-    - $CI_PROJECT_TITLE.*.dll
+    - $CI_PROJECT_TITLE.dll
     expire_in: never
     reports:
        dotenv: job.env
