@@ -207,7 +207,7 @@ namespace GOTHIC_ENGINE {
         }
 
         void UpdateWeaponMode(json update) {
-            if (hasNpc) {
+            if (hasModel) {
                 auto wm = update["wm"].get<int>();
                 lastWeaponMode = wm;
                 npc->SetWeaponMode2(wm);
