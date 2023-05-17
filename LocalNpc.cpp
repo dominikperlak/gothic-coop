@@ -223,19 +223,16 @@ namespace GOTHIC_ENGINE {
         }
 
         void SyncBodystate() {
-
             auto bs = npc->GetBodyState();
 
             if (bs != lastBodyState)
             {
                 addUpdate(SYNC_BODYSTATE);
-
                 lastBodyState = bs;
             }
         }
 
         void SyncOverlays() {
-
             if (!npc->CompareOverlaysArray(pArrOverlays))
             {
                 addUpdate(SYNC_OVERLAYS);

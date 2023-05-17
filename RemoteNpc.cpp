@@ -293,20 +293,17 @@ namespace GOTHIC_ENGINE {
         void UpdateBodystate(json update) {
             if (hasNpc) {
                 auto bs = update["bs"].get<int>();
-
                 npc->SetBodyState(bs);
             }
         }
 
         void UpdateOverlays(json update) {
             if (hasNpc) {
-
                 std::vector<json> overlays = update["overlays"];
                 zCArray<int> overlaysNew;
 
                 for each (auto a in overlays) {
                     auto overlayId = a["over"].get<int>();
-
                     overlaysNew.InsertEnd(overlayId);
                 }
 
@@ -626,8 +623,6 @@ namespace GOTHIC_ENGINE {
             }
         }
 
-        
-        // creates smoothness for npcs' changing position
         void SetNewNpcPosition()
         {
             bool inMove = npc->isInMovementMode;
@@ -639,124 +634,11 @@ namespace GOTHIC_ENGINE {
 #endif
             }
 
-            npc->SetCollDet(FALSE);
-
-            auto lerpPos = Lerp(npc->GetPositionWorld(), *lastPositionFromServer, 0.5f);
-            npc->SetPositionWorld(lerpPos);
-            npc->SetCollDet(TRUE);
+            auto pos = *lastPositionFromServer;
+            npc->trafoObjToWorld.SetTranslation(pos);
 
             if (inMove) {
                 npc->BeginMovement();
-            }
-            
-            return; // for now
-
-
-            zVEC3 newPos = *lastPositionFromServer;
-
-            float dist = npc->GetPositionWorld().Distance(newPos);
-            float timePart = ztimer->frameTimeFloat / 1000.0f;
-            float minPosValue = 2.75f;
-
-
-            if (dist >= 2.0f)
-            {
-                bool inMove = npc->isInMovementMode;
-
-
-                if (inMove) {
-                    #if ENGINE >= Engine_G2
-                                        npc->EndMovement(false);
-                    #else
-                                        npc->EndMovement();
-                    #endif
-                }
-
-                zVEC3 bestPos;
-                float bestDist = float_MAX;
-
-                // turn gravity off while jumping for smoother movement
-                if (npc->GetBodyState() == BS_JUMP)
-                {
-                    npc->rigidBody->gravityOn = 0;
-                }
-
-                if (npc->GetBodyState() == BS_FALL || npc->GetBodyState() == BS_CLIMB)
-                {
-                    auto lerpPos = Lerp(npc->GetPositionWorld(), newPos, 0.05f);
-                    npc->SetCollDet(FALSE);
-                    npc->SetPositionWorld(lerpPos);
-                    npc->SetCollDet(TRUE);
-                }
-                else if (npc->GetBodyState() == BS_JUMP)
-                {
-                    if (dist > 200.0f)
-                    {
-                        npc->SetCollDet(FALSE);
-                        npc->SetPositionWorld(newPos);
-                        npc->SetCollDet(TRUE);
-                    }
-                    else
-                    {
-                        auto lerpval = dist / 200.0f;
-                        zClamp(lerpval, 0.016f, 1.0f);
-                        auto lerpPos = Lerp(npc->GetPositionWorld(), newPos, lerpval);
-                        npc->SetCollDet(FALSE);
-                        npc->SetPositionWorld(lerpPos);
-                        npc->SetCollDet(TRUE);
-                    }
-
-                }
-                else if (dist >= 200.0f)
-                {
-                    auto lerpval = 0.15f;
-                    auto lerpPos = Lerp(npc->GetPositionWorld(), newPos, lerpval);
-                    npc->SetCollDet(FALSE);
-                    npc->SetPositionWorld(lerpPos);
-                    npc->SetCollDet(TRUE);
-                }
-                // teleport
-                else if (dist >= 350.0f)
-                {
-                    npc->SetCollDet(FALSE);
-                    npc->SetPositionWorld(newPos);
-                    npc->SetCollDet(TRUE);
-                }
-                else
-                {
-
-                    float lerpval = timePart * dist / 2.0f; //10.0f by default
-                    zClamp(lerpval, 0.0005f, 0.033f);
-
-
-                    auto lerpPos = Lerp(npc->GetPositionWorld(), newPos, lerpval);
-
-                    float lerpDiff = lerpPos.Distance(npc->GetPositionWorld());
-
-
-
-                    if (lerpDiff < minPosValue && dist >= 12 && dist <= 50)
-                    {
-                        lerpPos = npc->GetPositionWorld() + (newPos - npc->GetPositionWorld()).Normalize() * minPosValue;
-
-                    }
-                    else if (lerpDiff < (minPosValue / 10) && dist < 12)
-                    {
-                        lerpPos = npc->GetPositionWorld() + (newPos - npc->GetPositionWorld()).Normalize() * minPosValue / 10;
-
-                    }
-
-                    npc->SetCollDet(FALSE);
-                    npc->SetPositionWorld(lerpPos);
-                    npc->SetCollDet(TRUE);
-                }
-
-                if (npc->GetBodyState() != BS_JUMP)
-                {
-                    npc->rigidBody->gravityOn = 1;
-                }
-
-                if (inMove) npc->BeginMovement();
             }
         }
 
