@@ -223,6 +223,14 @@ namespace GOTHIC_ENGINE {
         void UpdateHp(json update) {
             auto hp = update["hp"].get<int>();
             auto hpMax = update["hp_max"].get<int>();
+
+            if (!IsCoopPlayer(name) && hp == 0) {
+                npc->SetAttribute(NPC_ATR_HITPOINTS, 1);
+                npc->SetAttribute(NPC_ATR_HITPOINTSMAX, hpMax);
+                lastHpFromServer = -1;
+                return;
+            }
+
             lastHpFromServer = hp;
             if (hasNpc) {
                 npc->SetAttribute(NPC_ATR_HITPOINTS, hp);
