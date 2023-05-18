@@ -380,5 +380,17 @@ namespace GOTHIC_ENGINE {
             Ivk_zCModel_StartAni(_this, a, b);
             return;
         }
+
+        if (a && a->aniName) {
+            auto activeBefore = _this->IsAnimationActive(a->aniName);
+            Ivk_zCModel_StartAni(_this, a, b);
+
+            if (activeBefore == 0) {
+                _this->StopAnimation(a->aniName);
+            }
+        } else {
+            Ivk_zCModel_StartAni(_this, a, b);
+            return;
+        }
     }
 }
