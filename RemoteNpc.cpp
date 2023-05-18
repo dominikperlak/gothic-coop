@@ -568,6 +568,7 @@ namespace GOTHIC_ENGINE {
                             targetNpc->OnDamage(targetNpc, player, COOP_MAGIC_NUMBER, damageMode, targetNpc->GetPositionWorld());
                         }
 
+                        lastHpFromServer = -1;
                         targetNpc->SetAttribute(NPC_ATR_HITPOINTS, 0);
                     }
                 }
@@ -610,7 +611,7 @@ namespace GOTHIC_ENGINE {
                     UpdateNpcPosition();
                 }
 
-                if (lastHpFromServer != -1 && lastHpFromServer != npc->GetAttribute(NPC_ATR_HITPOINTS)) {
+                if (lastHpFromServer != -1 && lastHpFromServer != npc->GetAttribute(NPC_ATR_HITPOINTS) && !npc->IsDead()) {
                     npc->SetAttribute(NPC_ATR_HITPOINTS, lastHpFromServer);
                 }
 
