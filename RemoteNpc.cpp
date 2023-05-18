@@ -623,8 +623,7 @@ namespace GOTHIC_ENGINE {
             }
         }
 
-        void SetNewNpcPosition()
-        {
+        void UpdateNpcPosition() {
             bool inMove = npc->isInMovementMode;
             if (inMove) {
 #if ENGINE >= Engine_G2
@@ -640,17 +639,6 @@ namespace GOTHIC_ENGINE {
             if (inMove) {
                 npc->BeginMovement();
             }
-        }
-
-        void UpdateNpcPosition() {
-            if (!hasModel || !isSpawned) {
-                npc->SetPositionWorld(*lastPositionFromServer);
-                return;
-            }
-
-
-            SetNewNpcPosition();
-
         }
 
         void UpdateHasNpcAndHasModel() {
