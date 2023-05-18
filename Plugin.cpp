@@ -39,6 +39,9 @@ namespace GOTHIC_ENGINE {
         if (CoopConfig.contains("friendInstanceId")) {
             FriendInstanceId = string(CoopConfig["friendInstanceId"].get<std::string>().c_str()).ToChar();
         }
+        if (CoopConfig.contains("nickname")) {
+            MyNickname = string(CoopConfig["nickname"].get<std::string>().c_str()).ToChar();
+        }
     }
 
     void Game_Loop() {

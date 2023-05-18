@@ -3,6 +3,7 @@ namespace GOTHIC_ENGINE {
     {
     public:
         string name;
+        string playerNickname = "";
         oCNpc* npc = NULL;
         bool destroyed = false;
         bool isSpawned = false;
@@ -159,7 +160,9 @@ namespace GOTHIC_ENGINE {
                 auto x = update["x"].get<float>();
                 auto y = update["y"].get<float>();
                 auto z = update["z"].get<float>();
+                auto nickname = update["nickname"].get<std::string>();
 
+                playerNickname = nickname.c_str();
                 lastPositionFromServer = new zVEC3(x, y, z);
 
                 if (IsCoopPlayer(name)) {
@@ -665,7 +668,8 @@ namespace GOTHIC_ENGINE {
 
             ogame->spawnman->InsertNpc(npc, *lastPositionFromServer);
             isSpawned = true;
-            npc->name[0] = zSTRING(name);
+            npc->name[0] = playerNickname.IsEmpty() ? zSTRING(name) : playerNickname;
+
             npc->SetObjectName(name);
             npc->SetVobName(name);
             npc->SetVobPresetName(name);

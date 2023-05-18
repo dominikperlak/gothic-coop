@@ -361,6 +361,7 @@ namespace GOTHIC_ENGINE {
                 case INIT_NPC:
                 {
                     j["instanceId"] = parser->GetIndex(npc->GetInstanceName());
+                    j["nickname"] = MyNickname;
                     j["x"] = lastPosition.n[0];
                     j["y"] = lastPosition.n[1];
                     j["z"] = lastPosition.n[2];

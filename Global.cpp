@@ -23,6 +23,8 @@ namespace GOTHIC_ENGINE {
     zVEC3* CurrentWorldTOTPosition;
 
     string FriendInstanceId = "ch";
+    string MyNickname = "";
+
     int PlayersDamageMultipler = 50;
     int NpcsDamageMultipler = 100;
     int ToggleGameLogKey;
