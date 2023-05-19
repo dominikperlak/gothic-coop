@@ -167,7 +167,7 @@ namespace GOTHIC_ENGINE {
                     secondUniquePart = NpcToFirstRoutineWp[npc];
                 }
                 if (!firstRun) {
-                    secondUniquePart = "DYNAMIC";
+                    secondUniquePart = npc->wpname ? string::Combine("DYNAMIC-%s", string(npc->wpname)) : string("DYNAMIC");
                 }
                 name = string::Combine("%s-%s", string(npc->GetObjectName()), secondUniquePart);
                 NamesCounter[name] += 1;
