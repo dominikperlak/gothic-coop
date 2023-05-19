@@ -381,16 +381,13 @@ namespace GOTHIC_ENGINE {
             return;
         }
 
-        if (a && a->aniName) {
+        if (a && a->aniName && (a->aniName == "S_RUN" || a->aniName == "S_FISTRUN")) {
             auto activeBefore = _this->IsAnimationActive(a->aniName);
             Ivk_zCModel_StartAni(_this, a, b);
 
             if (activeBefore == 0) {
                 _this->StopAnimation(a->aniName);
             }
-        } else {
-            Ivk_zCModel_StartAni(_this, a, b);
-            return;
         }
     }
 }
