@@ -4,21 +4,11 @@ namespace GOTHIC_ENGINE {
     TSaveLoadGameInfo& SaveLoadGameInfo = UnionCore::SaveLoadGameInfo;
 
     void _Game_Entry() {
-        try {
-            Game_Entry();
-        }
-        catch (...) {
-            SaveErrorDetails();
-        }
+        Game_Entry();
     }
 
     void _Game_Init() {
-        try {
-            Game_Init();
-        }
-        catch (...) {
-            SaveErrorDetails();
-        }
+        Game_Init();
     }
 
     void _Game_Loop() {

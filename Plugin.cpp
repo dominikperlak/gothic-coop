@@ -16,7 +16,13 @@ namespace GOTHIC_ENGINE {
         std::ifstream configFile(configFilePath);
 
         if (configFile.good()) {
-            CoopConfig = json::parse(configFile);
+            try {
+                CoopConfig = json::parse(configFile);
+            }
+            catch (...) {
+                Message::Error("(Gothic Coop) Invalid config file, please check your GothicCoopConfig.json file!");
+                exit(1);
+            }
         }
         else {
             Message::Error("(Gothic Coop) No config file found!");
