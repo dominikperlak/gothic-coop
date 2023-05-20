@@ -678,7 +678,7 @@ namespace GOTHIC_ENGINE {
 
             npc->UseStandAI();
             npc->dontWriteIntoArchive = TRUE;
-            npc->idx = 69133769;
+            npc->idx = COOP_MAGIC_NUMBER;
 
 #if ENGINE >= Engine_G2
             npc->SetHitChance(1, 100);
