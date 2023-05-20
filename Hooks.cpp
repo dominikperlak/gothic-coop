@@ -337,14 +337,6 @@ namespace GOTHIC_ENGINE {
             return;
         }
 
-        if (ClientThread && _this->homeVob && _this->homeVob != player && a && a->aniName && a->aniName.Compare("S_FALLDN")) {
-            return;
-        }
-
-        if (ServerThread && _this->homeVob && PlayerNpcs.count((oCNpc*)_this->homeVob) && a && a->aniName && a->aniName.Compare("S_FALLDN")) {
-            return;
-        }
-
         if (ClientThread && b != COOP_MAGIC_NUMBER && _this->homeVob && IgnoredSyncNpc(_this->homeVob)) {
             Ivk_zCModel_StartAni(_this, a, 0);
             return;
