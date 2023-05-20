@@ -192,4 +192,13 @@ namespace GOTHIC_ENGINE {
 		if (GetAnictrl())
 			GetAnictrl()->InitAnimations();
 	};
+
+	void zCParser::CallFuncByName(zSTRING name) {
+		int idx = GetIndex(name);
+
+		if (idx != -1) {
+			CallFunc(idx);
+		}
+	}
+
 }

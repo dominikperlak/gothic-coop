@@ -590,6 +590,7 @@ namespace GOTHIC_ENGINE {
                 player->SetWeaponMode2(NPC_WEAPON_NONE);
                 player->ResetPos(player->GetPositionWorld());
                 player->SetAttribute(NPC_ATR_HITPOINTS, 1);
+                parser->CallFuncByName("RX_Mult_ReviveHero");
             }
         }
 

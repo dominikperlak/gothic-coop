@@ -3,3 +3,4 @@
 // User API for zCParser
 // Add your methods here
 
+void zCParser::CallFuncByName(zSTRING name);
