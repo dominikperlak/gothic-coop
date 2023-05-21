@@ -126,7 +126,7 @@ namespace GOTHIC_ENGINE {
                     t.Detach();
                     ClientThread = &t;
 
-                    ogame->SetTime(0, 12, 00);
+                    ogame->SetTime(ogame->GetWorldTimer()->GetDay(), 12, 00);
                     rtnMan->RestartRoutines();
                 }
                 else {
