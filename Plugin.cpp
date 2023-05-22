@@ -199,6 +199,7 @@ namespace GOTHIC_ENGINE {
         GameChat->Clear();
         LastNpcListRefreshTime = 0;
         LastUpdateListOfVisibleNpcs = 0;
+        KilledByPlayerNpcNames.clear();
 
         auto totWp = ogame->GetWorld()->wayNet->GetWaypoint("TOT");
         if (totWp) {

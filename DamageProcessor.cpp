@@ -15,6 +15,11 @@ namespace GOTHIC_ENGINE {
 
         if (Myself && hit.attacker == Myself->npc) {
             hit.npcUniqueName = NpcToUniqueNameList[hit.npc];
+
+            if (hit.npc->IsDead()) {
+                KilledByPlayerNpcNames[hit.npcUniqueName] = hit.npc;
+            }
+
             Myself->hitsToSync.push_back(hit);
             return;
         }
