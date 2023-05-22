@@ -1,6 +1,6 @@
 namespace GOTHIC_ENGINE {
-    const int COOP_VERSION = 16;
-    const int COOP_MAGIC_NUMBER = 1337369;
+    const int COOP_VERSION = 169;
+    const int COOP_MAGIC_NUMBER = 1337;
     int BROADCAST_DISTANCE = 4500;
 
     DWORD MainThreadId;
