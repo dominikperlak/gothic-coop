@@ -228,7 +228,7 @@ namespace GOTHIC_ENGINE {
             auto hpMax = update["hp_max"].get<int>();
 
             if (!IsCoopPlayer(name) && hp == 0) {
-                if (hasNpc) {
+                if (hasNpc && !npc->IsDead()) {
                     npc->SetAttribute(NPC_ATR_HITPOINTS, 1);
                 }
                 lastHpFromServer = -1;
