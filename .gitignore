@@ -38,6 +38,27 @@ PDB
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
+# CLion
+.idea/
+cmake-build-g1adebug/
+cmake-build-g1amdRelease/
+cmake-build-g1amtRelease/
+cmake-build-g1debug/
+cmake-build-g1mdRelease/
+cmake-build-g1mtRelease/
+cmake-build-g2adebug/
+cmake-build-g2amdRelease/
+cmake-build-g2amtRelease/
+cmake-build-g2debug/
+cmake-build-g2mdRelease/
+cmake-build-g2mtRelease/
+cmake-build-mpx2debug/
+cmake-build-mpx2mdRelease/
+cmake-build-mpx2mtRelease/
+cmake-build-mpx4debug/
+cmake-build-mpx4mdRelease/
+cmake-build-mpx4mtRelease/
+Bin/
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
