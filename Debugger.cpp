@@ -94,7 +94,7 @@ namespace GOTHIC_ENGINE {
             }
 
             GameChat->Clear();
-            ChatLog("[GothicCoop] Error", zCOLOR(230, 0, 0, 255));
+            ChatLog(string::Combine("[GothicCoop] Error (v. %i):", COOP_VERSION), zCOLOR(230, 0, 0, 255));
 
             if (PluginState.compare("") != 0) {
                 ChatLog("State:");
