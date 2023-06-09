@@ -49,6 +49,7 @@ namespace GOTHIC_ENGINE {
 
         HANDLE process;
         process = GetCurrentProcess();
+        DWORD64 dllBase = (DWORD64)GetModuleHandleA("GothicCoop.dll");
 
         std::vector<std::string> lastMethodCalls;
 
@@ -79,8 +80,11 @@ namespace GOTHIC_ENGINE {
             }
             else
             {
-                DWORD error = GetLastError();
-                CoopLog(string::Combine("SymFromAddr returned error : %i\n", error).ToChar());
+                auto log = string::Combine("GothicCoop.dll+%i\n", dwAddress - dllBase).ToChar();
+                CoopLog(log);
+                if (i >= LastExecutedFunctionAddressesMaxLimit - 11 && i != LastExecutedFunctionAddressesMaxLimit) {
+                    lastMethodCalls.push_back(log);
+                }
             }
         }
 
@@ -108,6 +112,7 @@ namespace GOTHIC_ENGINE {
             }
 
             ChatLog("Please save and rehost the game. You can also try to continue playing the game if it is stable.");
+            ChatLog("You can hide the error by pressing P (by default).");
         }
 
         TrackLastExecutedFunctions = true;
