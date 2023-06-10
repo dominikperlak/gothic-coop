@@ -33,7 +33,7 @@ namespace GOTHIC_ENGINE {
 
                 for (int i = 0; i < server->peerCount; i++) {
                     auto peer = &server->peers[i];
-                    auto player = (RemoteNpc*)peer->data;
+                    auto player = (PeerData*)peer->data;
 
                     if (!peer || !player) {
                         continue;

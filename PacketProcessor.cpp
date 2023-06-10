@@ -60,7 +60,11 @@ namespace GOTHIC_ENGINE {
             j["connectId"] = packet.peer->connectID;
             ReadyToSendJsons.enqueue(j);
 
-            packet.peer->data = addSyncedNpc(playerName);
+            addSyncedNpc(playerName);
+
+            auto d = new PeerData();
+            d->name = playerName;
+            packet.peer->data = d;
 
             if (Myself) {
                 Myself->Reinit();
@@ -73,7 +77,7 @@ namespace GOTHIC_ENGINE {
         }
         case ENET_EVENT_TYPE_RECEIVE:
         {
-            auto player = (RemoteNpc*)packet.peer->data;
+            auto player = (PeerData*)packet.peer->data;
             const char* data = (const char*)packet.packet->data;
             SaveNetworkPacket(data);
 
@@ -86,7 +90,7 @@ namespace GOTHIC_ENGINE {
         }
         case ENET_EVENT_TYPE_DISCONNECT:
         {
-            auto remoteNpc = (RemoteNpc*)(packet.peer->data);
+            auto remoteNpc = (PeerData*)(packet.peer->data);
             ChatLog(string::Combine("%s disconnected.", remoteNpc->name));
 
             json j;

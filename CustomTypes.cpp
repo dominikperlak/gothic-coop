@@ -42,4 +42,11 @@ namespace GOTHIC_ENGINE {
         string npcUniqueName;
         string targetNpcUniqueName;
     };
+
+    class PeerData
+    {
+    public:
+        string name;
+        PeerData() {}
+    };
 }
