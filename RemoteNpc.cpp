@@ -505,6 +505,10 @@ namespace GOTHIC_ENGINE {
                     auto targetNpc = player;
                     int health = targetNpc->GetAttribute(NPC_ATR_HITPOINTS);
 
+                    if (player->GetAnictrl()->CanParade(npc)) {
+                        break;
+                    }
+
                     if (isUnconscious && stillAlive) {
                         targetNpc->SetWeaponMode2(NPC_WEAPON_NONE);
                         targetNpc->DropUnconscious(1, npc);
@@ -512,7 +516,7 @@ namespace GOTHIC_ENGINE {
 
                     if (stillAlive) {
                         targetNpc->SetAttribute(NPC_ATR_HITPOINTS, 999999);
-                        targetNpc->GetEM(false)->OnDamage(targetNpc, npc, 1, damageMode, targetNpc->GetPositionWorld());
+                        targetNpc->GetEM(false)->OnDamage(targetNpc, npc, COOP_MAGIC_NUMBER, damageMode, targetNpc->GetPositionWorld());
                         targetNpc->SetAttribute(NPC_ATR_HITPOINTS, health - damage);
                     }
                     else {
