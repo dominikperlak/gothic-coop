@@ -10,13 +10,13 @@ namespace GOTHIC_ENGINE {
             return;
         }
 
-        if (player->IsDead() || player->IsUnconscious()) {
-            ReviveStartTime = 0;
-            ReviveState = "READY";
-            return;
-        }
-
         if (ReviveStartTime + 10000 < CurrentMs && ReviveState.Compare("HEALING")) {
+            if (player->IsDead() || player->IsUnconscious()) {
+                ReviveStartTime = 0;
+                ReviveState = "READY";
+                return;
+            }
+
             Myself->SyncRevived(ReviveNpc->GetObjectName());
 
             if (ReviveNpc) {
