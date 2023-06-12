@@ -555,14 +555,21 @@ namespace GOTHIC_ENGINE {
                 if (targetNpc) {
                     int health = targetNpc->GetAttribute(NPC_ATR_HITPOINTS);
                     auto isTalkingWith = IsPlayerTalkingWithNpc(targetNpc);
+                    static int AIV_PARTYMEMBER = GetPartyMemberID();
 
                     if (isUnconscious && stillAlive) {
                         targetNpc->SetWeaponMode2(NPC_WEAPON_NONE);
-                        targetNpc->DropUnconscious(1, npc);
+
+                        if (IsCoopPlayer(npc->GetObjectName()) || npc->aiscriptvars[AIV_PARTYMEMBER] == True) {
+                            targetNpc->DropUnconscious(1, player);
+                        }
+                        else {
+                            targetNpc->DropUnconscious(1, npc);
+                        }
                     }
 
                     if (stillAlive) {
-                        if (!isTalkingWith) {
+                        if (!isTalkingWith && !isUnconscious) {
                             targetNpc->SetAttribute(NPC_ATR_HITPOINTS, 999999);
                             targetNpc->GetEM(false)->OnDamage(targetNpc, npc, COOP_MAGIC_NUMBER, damageMode, targetNpc->GetPositionWorld());
                         }
@@ -573,7 +580,6 @@ namespace GOTHIC_ENGINE {
                     else {
                         targetNpc->SetAttribute(NPC_ATR_HITPOINTS, 1);
 
-                        static int AIV_PARTYMEMBER = GetPartyMemberID();
                         if (IsCoopPlayer(npc->GetObjectName()) || npc->aiscriptvars[AIV_PARTYMEMBER] == True) {
                             targetNpc->OnDamage(targetNpc, player, COOP_MAGIC_NUMBER, damageMode, targetNpc->GetPositionWorld());
                         }
