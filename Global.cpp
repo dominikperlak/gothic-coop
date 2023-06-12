@@ -1,5 +1,5 @@
 namespace GOTHIC_ENGINE {
-    const int COOP_VERSION = 21;
+    const int COOP_VERSION = 40;
     const int COOP_MAGIC_NUMBER = 1337;
     int BROADCAST_DISTANCE = 4500;
 
