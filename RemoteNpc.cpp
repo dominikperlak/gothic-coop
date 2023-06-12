@@ -560,7 +560,7 @@ namespace GOTHIC_ENGINE {
                     if (stillAlive) {
                         if (!isTalkingWith) {
                             targetNpc->SetAttribute(NPC_ATR_HITPOINTS, 999999);
-                            targetNpc->GetEM(false)->OnDamage(targetNpc, npc, 1, damageMode, targetNpc->GetPositionWorld());
+                            targetNpc->GetEM(false)->OnDamage(targetNpc, npc, COOP_MAGIC_NUMBER, damageMode, targetNpc->GetPositionWorld());
                         }
                         if (ServerThread) {
                             targetNpc->SetAttribute(NPC_ATR_HITPOINTS, health - damage > 0 ? health - damage : 0);
