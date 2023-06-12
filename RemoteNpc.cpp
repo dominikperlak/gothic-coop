@@ -43,11 +43,6 @@ namespace GOTHIC_ENGINE {
                 return;
             }
 
-            // do not update on cutscenes
-            if (!IsCoopPlayer(name) && zCCSCamera::playing) {
-                return;
-            }
-
             if (IsNpcInTot()) {
                 return;
             }

@@ -373,11 +373,6 @@ namespace GOTHIC_ENGINE {
             return;
         }
 
-        if (ClientThread && !IsCoopPlayer(_this->GetObjectName()) && zCCSCamera::playing) {
-            Ivk_zCModel_StartAni(_this, a, b);
-            return;
-        }
-
         auto npc = (oCNpc*)_this->homeVob;
         if (ClientThread && npc && npc->IsDead()) {
             Ivk_zCModel_StartAni(_this, a, b);
