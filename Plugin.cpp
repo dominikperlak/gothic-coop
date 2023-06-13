@@ -104,6 +104,7 @@ namespace GOTHIC_ENGINE {
             }
         }
 
+        PluginState = "KeysPressedChecks";
         if (!IsPlayerTalkingWithAnybody()) {
             if (zinput->KeyToggled(StartServerKey) && !ServerThread && !ClientThread) {
                 wchar_t mappedPort[1234];
@@ -151,6 +152,8 @@ namespace GOTHIC_ENGINE {
                 }
             }
         }
+
+        PluginState = "GameLoop_End";
     }
 
     void Game_SaveBegin() {
