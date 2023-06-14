@@ -41,17 +41,29 @@ namespace GOTHIC_ENGINE {
         }
 
         while (true) {
-            ENetEvent event;
-            auto eventStatus = enet_host_service(client, &event, 1);
+            try {
+                ENetEvent event;
+                auto eventStatus = enet_host_service(client, &event, 1);
 
-            if (eventStatus > 0) {
-                ReadyToBeReceivedPackets.enqueue(event);
+                if (eventStatus > 0) {
+                    ReadyToBeReceivedPackets.enqueue(event);
+                }
+
+                if (!ReadyToSendJsons.isEmpty()) {
+                    auto rawJson = ReadyToSendJsons.dequeue();
+                    auto bjson = json::to_bson(rawJson);
+
+                    ENetPacket* packet = enet_packet_create(&bjson[0], bjson.size(), ENET_PACKET_FLAG_RELIABLE);
+                    enet_peer_send(peer, 0, packet);
+                }
             }
-
-            if (!ReadyToSendJsons.isEmpty()) {
-                auto updateJSON = ReadyToSendJsons.dequeue().dump();
-                ENetPacket* packet = enet_packet_create(updateJSON.c_str(), strlen(updateJSON.c_str()) + 1, ENET_PACKET_FLAG_RELIABLE);
-                enet_peer_send(peer, 0, packet);
+            catch (std::exception& ex) {
+                Message::Error(ex.what(), "Client Thread Exception");
+                return EXIT_FAILURE;
+            }
+            catch (...) {
+                Message::Error("Caught unknown exception in client thread!");
+                return EXIT_FAILURE;
             }
         }
     }

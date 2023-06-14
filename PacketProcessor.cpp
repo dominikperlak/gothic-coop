@@ -78,14 +78,20 @@ namespace GOTHIC_ENGINE {
         case ENET_EVENT_TYPE_RECEIVE:
         {
             auto player = (PeerData*)packet.peer->data;
+            auto dataLenght = packet.packet->dataLength;
             const char* data = (const char*)packet.packet->data;
-            SaveNetworkPacket(data);
 
-            auto j = json::parse(data);
+            std::vector<std::uint8_t> bytesVector;
+            for (int i = 0; i < dataLenght; i++) {
+                bytesVector.push_back(data[i]);
+            }
+
+            auto j = json::from_bson(bytesVector);
             j["id"] = player->name.ToChar();
             ReadyToBeDistributedPackets.enqueue(j);
 
             ProcessCoopPacket(j, packet);
+            SaveNetworkPacket(j.dump(-1, ' ', false, json::error_handler_t::ignore).c_str());
             break;
         }
         case ENET_EVENT_TYPE_DISCONNECT:
@@ -110,11 +116,16 @@ namespace GOTHIC_ENGINE {
         switch (packet.type) {
         case ENET_EVENT_TYPE_RECEIVE:
         {
+            auto dataLenght = packet.packet->dataLength;
             const char* data = (const char*)packet.packet->data;
-            SaveNetworkPacket(data);
+            std::vector<std::uint8_t> bytesVector;
+            for (int i = 0; i < dataLenght; i++) {
+                bytesVector.push_back(data[i]);
+            }
 
-            auto j = json::parse(data);
+            auto j = json::from_bson(bytesVector);
             ProcessCoopPacket(j, packet);
+            SaveNetworkPacket(j.dump(-1, ' ', false, json::error_handler_t::ignore).c_str());
 
             enet_packet_destroy(packet.packet);
             break;

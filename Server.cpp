@@ -21,36 +21,49 @@ namespace GOTHIC_ENGINE {
 
         ChatLog(string::Combine("(Server) Ready (v. %i).", COOP_VERSION));
         while (true) {
-            ENetEvent event;
-            auto eventStatus = enet_host_service(server, &event, 1);
-            if (eventStatus > 0) {
-                ReadyToBeReceivedPackets.enqueue(event);
-            }
+            try {
+                ENetEvent event;
+                auto eventStatus = enet_host_service(server, &event, 1);
+                if (eventStatus > 0) {
+                    ReadyToBeReceivedPackets.enqueue(event);
+                }
 
-            if (!ReadyToBeDistributedPackets.isEmpty()) {
-                auto jsonPacket = ReadyToBeDistributedPackets.dequeue();
-                auto playerId = jsonPacket["id"].get<std::string>();
+                if (!ReadyToBeDistributedPackets.isEmpty()) {
+                    auto jsonPacket = ReadyToBeDistributedPackets.dequeue();
+                    auto playerId = jsonPacket["id"].get<std::string>();
 
-                for (int i = 0; i < server->peerCount; i++) {
-                    auto peer = &server->peers[i];
-                    auto player = (PeerData*)peer->data;
+                    for (int i = 0; i < server->peerCount; i++) {
+                        auto peer = &server->peers[i];
+                        auto player = (PeerData*)peer->data;
 
-                    if (!peer || !player) {
-                        continue;
-                    }
+                        if (!peer || !player) {
+                            continue;
+                        }
 
-                    if (!player->name.Compare(playerId.c_str())) {
-                        auto stringPacket = jsonPacket.dump();
-                        ENetPacket* packet = enet_packet_create(stringPacket.c_str(), strlen(stringPacket.c_str()) + 1, ENET_PACKET_FLAG_RELIABLE);
-                        enet_peer_send(peer, 0, packet);
+                        if (!player->name.Compare(playerId.c_str())) {
+                            auto bson = json::to_bson(jsonPacket);
+
+                            ENetPacket* packet = enet_packet_create(&bson[0], bson.size(), ENET_PACKET_FLAG_RELIABLE);
+                            enet_peer_send(peer, 0, packet);
+                        }
                     }
                 }
-            }
 
-            if (!ReadyToSendJsons.isEmpty()) {
-                auto updateJSON = ReadyToSendJsons.dequeue().dump();
-                ENetPacket* packet = enet_packet_create(updateJSON.c_str(), strlen(updateJSON.c_str()) + 1, ENET_PACKET_FLAG_RELIABLE);
-                enet_host_broadcast(server, 0, packet);
+                if (!ReadyToSendJsons.isEmpty()) {
+                    auto rawJson = ReadyToSendJsons.dequeue();
+                    auto bson = json::to_bson(rawJson);
+
+                    ENetPacket* packet = enet_packet_create(&bson[0], bson.size(), ENET_PACKET_FLAG_RELIABLE);
+                    enet_host_broadcast(server, 0, packet);
+                }
+            }
+            catch (std::exception& ex) {
+                Message::Error(ex.what(), "Server Thread Exception");
+                return EXIT_FAILURE;
+            }
+            catch (...) {
+                Message::Error("Caught unknown exception in server thread!");
+                return EXIT_FAILURE;
             }
         }
     }
