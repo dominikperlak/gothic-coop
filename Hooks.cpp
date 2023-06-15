@@ -18,6 +18,16 @@ namespace GOTHIC_ENGINE {
             return;
         }
 
+#if ENGINE == Engine_G1
+        if (ServerThread && damdesc.pNpcAttacker && (damdesc.pNpcAttacker == player || PlayerNpcs.count(damdesc.pNpcAttacker))) {
+            if (_this->GetAttitude(damdesc.pNpcAttacker) == NPC_ATT_HOSTILE) {
+                auto randValue = GetRandVal(0, 100);
+                if (randValue > 33) {
+                    _this->SetEnemy(damdesc.pNpcAttacker);
+                }
+            }
+        }
+#endif
         // Blocking animations on clients for NPC is not preventing attacking sometimes (so do not call unless attack from the coop engine)
         if (ClientThread && damdesc.pNpcAttacker != player && _this == player && damdesc.fDamageTotal != COOP_MAGIC_NUMBER) {
             return;
