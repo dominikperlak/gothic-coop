@@ -224,6 +224,8 @@ namespace GOTHIC_ENGINE {
                 else {
                     // if coop friend is changing weapon mode while the game thinks IsUnconscious -> restart AI state
                     if (npc->IsUnconscious()) {
+                        npc->GetEM()->KillMessages();
+                        npc->ClearEM();
                         npc->state.ClearAIState();
                     }
                 }
