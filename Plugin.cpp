@@ -144,10 +144,13 @@ namespace GOTHIC_ENGINE {
             }
 
             if (zinput->KeyToggled(ReinitPlayersKey)) {
-                for (auto playerNpcToName : PlayerNpcs) {
+                ChatLog("Respawning all coop friend NPCs.");
+
+                std::map<oCNpc*, string> PlayerNpcsCopy = PlayerNpcs;
+                for (auto playerNpcToName : PlayerNpcsCopy) {
                     auto name = playerNpcToName.second;
                     if (SyncNpcs.count(name)) {
-                        SyncNpcs[name]->InitCoopFriendNpc();
+                        SyncNpcs[name]->ReinitCoopFriendNpc();
                     }
                 }
             }

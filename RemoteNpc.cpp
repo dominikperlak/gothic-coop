@@ -14,6 +14,7 @@ namespace GOTHIC_ENGINE {
         zVEC3* lastPositionFromServer = NULL;
         float lastHeadingFromServer = -1;
         int lastHpFromServer = -1;
+        int lastMaxHpFromServer = -1;
         int lastWeaponMode = -1;
         int lastWeapon1 = -1;
         int lastWeapon2 = -1;
@@ -240,6 +241,7 @@ namespace GOTHIC_ENGINE {
             }
 
             lastHpFromServer = hp;
+            lastMaxHpFromServer = hpMax;
             if (hasNpc) {
                 npc->SetAttribute(NPC_ATR_HITPOINTS, hp);
                 npc->SetAttribute(NPC_ATR_HITPOINTSMAX, hpMax);
@@ -674,6 +676,16 @@ namespace GOTHIC_ENGINE {
             hasModel = npc && npc->GetModel() && npc->vobLeafList.GetNum() > 0;
         }
 
+        void ReinitCoopFriendNpc() {
+            if (npc) {
+                PlayerNpcs.erase(npc);
+                PlayerNameToNpc.erase(name);
+                ogame->spawnman->DeleteNpc(npc);
+                npc = NULL;
+                InitCoopFriendNpc();
+            }
+        }
+
         void InitCoopFriendNpc() {
             int instanceId = GetFriendDefaultInstanceId();
             if (instanceId <= 0) {
@@ -703,6 +715,9 @@ namespace GOTHIC_ENGINE {
             npc->SetHitChance(3, 100);
             npc->SetHitChance(4, 100);
 #endif
+            if (lastMaxHpFromServer != -1) {
+                npc->SetAttribute(NPC_ATR_HITPOINTSMAX, lastMaxHpFromServer);
+            }
             npc->SetAttribute(NPC_ATR_STRENGTH, COOP_MAGIC_NUMBER);
             npc->SetAttribute(NPC_ATR_DEXTERITY, COOP_MAGIC_NUMBER);
             npc->SetAttribute(NPC_ATR_MANA, 10000);
