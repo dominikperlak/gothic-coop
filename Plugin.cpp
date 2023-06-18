@@ -76,10 +76,6 @@ namespace GOTHIC_ENGINE {
             PluginState = "GameLoop";
         }
 
-        if ((ClientThread || ServerThread) && !Myself) {
-            Myself = new LocalNpc(player, MyselfId);
-        }
-
         if (!IsCoopPaused) {
             PluginState = "PulseMyself";
             if (Myself) {
@@ -154,6 +150,11 @@ namespace GOTHIC_ENGINE {
                     }
                 }
             }
+        }
+
+        if ((ClientThread || ServerThread) && !Myself) {
+            PluginState = "Myself_Init";
+            Myself = new LocalNpc(player, MyselfId);
         }
 
         PluginState = "GameLoop_End";

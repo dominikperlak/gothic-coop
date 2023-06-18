@@ -34,7 +34,9 @@ namespace GOTHIC_ENGINE {
         if (npcToSync == NULL) {
             if (IsCoopPlayer(id)) {
                 npcToSync = addSyncedNpc(id.c_str());
-                Myself->Reinit();
+                if (Myself) {
+                    Myself->Reinit();
+                }
             }
             else if (UniqueNameToNpcList.count(id.c_str())) {
                 npcToSync = addSyncedNpc(id.c_str());
