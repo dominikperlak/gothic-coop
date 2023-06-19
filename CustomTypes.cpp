@@ -21,7 +21,9 @@ namespace GOTHIC_ENGINE {
         PLAYER_DISCONNECT,
         SYNC_TALENTS,
         SYNC_BODYSTATE,
-        SYNC_OVERLAYS
+        SYNC_OVERLAYS,
+        SYNC_DROPITEM,
+        SYNC_TAKEITEM
     };
 
     struct PlayerHit

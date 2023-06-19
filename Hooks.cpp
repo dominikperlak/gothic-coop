@@ -479,4 +479,52 @@ namespace GOTHIC_ENGINE {
         Message::Error(errorMessage.c_str());
         Ivk_zCExceptionHandlerUnhandledExceptionFilter(pointers);
     }
+
+    int __fastcall oCNpc_DoTakeVob(oCNpc*, void*, zCVob*);
+#if ENGINE >= Engine_G2
+    CInvoke<int(__thiscall*)(oCNpc*, zCVob*)> Ivk_oCNpc_DoTakeVob(0x007449C0, &oCNpc_DoTakeVob);
+#else
+    CInvoke<int(__thiscall*)(oCNpc*, zCVob*)> Ivk_oCNpc_DoTakeVob(0x006A0D10, &oCNpc_DoTakeVob);
+#endif
+    int __fastcall oCNpc_DoTakeVob(oCNpc* _this, void* vtable, zCVob* vob) {
+        if (Myself && _this && _this->IsAPlayer() && vob)
+        {
+            if (oCItem* item = zDYNAMIC_CAST<oCItem>(vob))
+            {
+                if (item->GetObjectName().HasWord("RX_DROPPED_ITEM_"))
+                {
+                    Myself->pItemTaken = zfactory->CreateItem(item->GetInstance());
+                    Myself->pItemTaken->flags = item->flags;
+                    Myself->pItemTaken->amount = item->amount;
+                    Myself->pItemTaken->SetObjectName(item->GetObjectName());
+                    Myself->pItemTakenPos = item->GetPositionWorld();
+                    Myself->SyncOnTakeItem();
+                }
+            }
+        }
+
+        return Ivk_oCNpc_DoTakeVob(_this, vob);
+    }
+
+    int __fastcall oCNpc_DoDropVob(oCNpc*, void*, zCVob*);
+#if ENGINE >= Engine_G2
+    CInvoke<int(__thiscall*)(oCNpc*, zCVob*)> Ivk_oCNpc_DoDropVob(0x00744DD0, &oCNpc_DoDropVob);
+#else
+    CInvoke<int(__thiscall*)(oCNpc*, zCVob*)> Ivk_oCNpc_DoDropVob(0x006A10F0, &oCNpc_DoDropVob);
+#endif
+    int __fastcall oCNpc_DoDropVob(oCNpc* _this, void* vtable, zCVob* vob) {
+        if (Myself && _this && _this->IsAPlayer() && vob && (!_this->IsDead() && !_this->IsUnconscious()))
+        {
+            if (auto pItem = vob->CastTo<oCItem>())
+            {
+                int randVal = GetRandVal(0, 2e9);
+                pItem->SetObjectName("RX_DROPPED_ITEM_" + Z randVal);
+                Myself->pItemDropped = pItem;
+                Myself->itemDropReady = true;
+                Myself->SyncOnDropItem();
+            }
+        }
+
+        return Ivk_oCNpc_DoDropVob(_this, vob);
+    }
 }

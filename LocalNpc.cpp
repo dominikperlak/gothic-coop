@@ -29,6 +29,10 @@ namespace GOTHIC_ENGINE {
         zSTRING lastRightHandInstanceName;
         zSTRING revivedFriend = "";
         long long lastTimeSyncTime = 0;
+        oCItem* pItemDropped = NULL;
+        oCItem* pItemTaken = NULL;
+        bool itemDropReady = false;
+        zVEC3 pItemTakenPos;
 
         LocalNpc(oCNpc* _npc, string _name) {
             npc = _npc;
@@ -98,6 +102,10 @@ namespace GOTHIC_ENGINE {
             lastTalents[1] = 0;
             lastTalents[2] = 0;
             lastTalents[3] = 0;
+            pItemDropped = NULL;
+            itemDropReady = false;
+            pItemTaken = NULL;
+            pItemTakenPos = zVEC3(0, 0, 0);
             pArrOverlays.DeleteList();
             
             if (lastAnimation) {
@@ -199,6 +207,22 @@ namespace GOTHIC_ENGINE {
             if (!lastArmorName.Compare(armorName)) {
                 addUpdate(SYNC_ARMOR);
                 lastArmorName = armorName;
+            }
+        }
+
+        void SyncOnDropItem()
+        {
+            if (itemDropReady)
+            {
+                addUpdate(SYNC_DROPITEM);
+            }
+        }
+
+        void SyncOnTakeItem()
+        {
+            if (pItemTaken)
+            {
+                addUpdate(SYNC_TAKEITEM);
             }
         }
 
@@ -498,6 +522,36 @@ namespace GOTHIC_ENGINE {
 
                     j["att"] = attacks;
                     hitsToSync.clear();
+                    break;
+                }
+                case SYNC_DROPITEM:
+                {
+                    if (pItemDropped && itemDropReady)
+                    {
+                        j["itemDropped"] = pItemDropped->GetInstanceName();
+                        j["count"] = pItemDropped->amount;
+                        j["flags"] = pItemDropped->flags;
+                        j["itemUniqName"] = pItemDropped->GetObjectName();
+
+                        itemDropReady = false;
+                    }
+                    break;
+                }
+                case SYNC_TAKEITEM:
+                {
+                    if (pItemTaken)
+                    {
+                        j["itemDropped"] = pItemTaken->GetInstanceName();
+                        j["count"] = pItemTaken->amount;
+                        j["flags"] = pItemTaken->flags;
+                        j["uniqName"] = pItemTaken->GetObjectName();
+                        j["x"] = pItemTakenPos.n[0];
+                        j["y"] = pItemTakenPos.n[1];
+                        j["z"] = pItemTakenPos.n[2];
+
+                        pItemTaken->RemoveVobFromWorld();
+                        pItemTaken = NULL;
+                    }
                     break;
                 }
                 case DESTROY_NPC:

@@ -204,4 +204,23 @@ namespace GOTHIC_ENGINE {
 	int GetRandVal(int min, int max) {
 		return (rand() % (max - min + 1) + min);
 	}
+
+	zCArray<zCVob*> CollectVobsInRadius(zVEC3 pos, int radius)
+	{
+		zTBBox3D box;
+		zCArray<zCVob*> vobList;
+
+		if (!player->GetHomeWorld())
+		{
+			return vobList;
+		}
+
+		box.maxs = pos + (zVEC3(1, 1, 1) * radius);
+		box.mins = pos - (zVEC3(1, 1, 1) * radius);
+
+		oCNpc* other = NULL;
+
+		player->GetHomeWorld()->bspTree.bspRoot->CollectVobsInBBox3D(vobList, box);
+		return vobList;
+	}
 }

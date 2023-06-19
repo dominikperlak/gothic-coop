@@ -149,6 +149,17 @@ namespace GOTHIC_ENGINE {
                     UpdateOverlays(update);
                     break;
                 }
+                case SYNC_DROPITEM:
+                {
+                    UpdateDropItem(update);
+                    break;
+                }
+                case SYNC_TAKEITEM:
+                {
+                    UpdateTakeItem(update);
+                    break;
+                }
+
                 }
             }
 
@@ -618,6 +629,71 @@ namespace GOTHIC_ENGINE {
                 player->ResetPos(player->GetPositionWorld());
                 player->SetAttribute(NPC_ATR_HITPOINTS, 1);
                 parser->CallFuncByName("RX_Mult_ReviveHero");
+            }
+        }
+
+        void UpdateDropItem(json update) {
+            if (!hasModel) {
+                return;
+            }
+
+            auto itemName = update["itemDropped"].get<std::string>();
+            auto count = update["count"].get<int>();
+            auto flags = update["flags"].get<int>();
+            auto itemUniqName = update["itemUniqName"].get<std::string>();
+
+            int index = parser->GetIndex(itemName.c_str());
+
+            if (index != -1)
+            {
+                oCItem* item = CreateCoopItem(index);
+                
+                if (item)
+                {
+                    item->amount = count;
+                    item->SetObjectName(itemUniqName.c_str());
+
+                    npc->DoPutInInventory(item);
+                    npc->DoDropVob(item);
+                }
+            }
+
+        }
+
+        void UpdateTakeItem(json update) {
+            if (!hasModel) {
+                return;
+            }
+
+            auto itemName = update["itemDropped"].get<std::string>();
+            auto count = update["count"].get<int>();
+            auto flags = update["flags"].get<int>();
+            auto x = update["x"].get<float>();
+            auto y = update["y"].get<float>();
+            auto z = update["z"].get<float>();
+            auto uniqName = update["uniqName"].get<std::string>();
+            auto itemPos = zVEC3(x, y, z);
+
+            auto pList = CollectVobsInRadius(itemPos, 2500);
+            int index = parser->GetIndex(itemName.c_str());
+
+            if (index == -1) {
+                return;
+            }
+
+            for (int i = 0; i < pList.GetNumInList(); i++)
+            {
+                if (auto pVob = pList.GetSafe(i))
+                {
+                    if (auto pItem = pVob->CastTo<oCItem>())
+                    {
+                        if (pItem->GetInstance() == index && pItem->GetObjectName() == uniqName.c_str())
+                        {
+                            pItem->RemoveVobFromWorld();
+                            break;
+                        }
+                    }
+                }
             }
         }
 
