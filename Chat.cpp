@@ -9,7 +9,7 @@
     {
     private:
         bool isShowing = true;
-        unsigned int chatLines = 32;
+        unsigned int chatLines = 50;
         std::vector<ChatLine> lines;
         SafeQueue<ChatLine> readyToBeDisplatedLines;
     public:

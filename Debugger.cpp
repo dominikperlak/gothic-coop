@@ -52,6 +52,7 @@ namespace GOTHIC_ENGINE {
         DWORD64 dllBase = (DWORD64)GetModuleHandleA("GothicCoop.dll");
 
         std::vector<std::string> lastMethodCalls;
+        std::vector<std::string> lastCoreMethodCalls;
 
         for (int i = 1; i <= LastExecutedFunctionAddressesMaxLimit; i++) {
             int currentFuncIndex = LastExecutedFunctionAddressesIndex + i;
@@ -77,6 +78,11 @@ namespace GOTHIC_ENGINE {
                 if (i >= LastExecutedFunctionAddressesMaxLimit - 11 && i != LastExecutedFunctionAddressesMaxLimit) {
                     lastMethodCalls.push_back(pSymbol->Name);
                 }
+                
+                auto symbolName = std::string(pSymbol->Name);
+                if (symbolName.rfind("Gothic_", 0) == 0 && i != LastExecutedFunctionAddressesMaxLimit) {
+                    lastCoreMethodCalls.push_back(symbolName);
+                }
             }
             else
             {
@@ -87,6 +93,8 @@ namespace GOTHIC_ENGINE {
                 }
             }
         }
+
+        std::vector<std::string> last10CoreMethodCalls(lastCoreMethodCalls.end() - 10, lastCoreMethodCalls.end());
 
         if (GameChat) {
             if (!GameChat->IsShowing()) {
@@ -108,6 +116,11 @@ namespace GOTHIC_ENGINE {
 
             ChatLog("Calls:");
             for (const auto& piece : lastMethodCalls) {
+                ChatLog(piece.c_str());
+            }
+
+            ChatLog("Core calls:");
+            for (const auto& piece : last10CoreMethodCalls) {
                 ChatLog(piece.c_str());
             }
 
