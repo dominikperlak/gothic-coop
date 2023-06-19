@@ -48,6 +48,15 @@ namespace GOTHIC_ENGINE {
         if (CoopConfig.contains("nickname")) {
             MyNickname = string(CoopConfig["nickname"].get<std::string>().c_str()).ToChar();
         }
+        if (CoopConfig.contains("editmode")) {
+            auto editModeValue = string(CoopConfig["editmode"].get<std::string>().c_str());
+            if (editModeValue.Compare("MARVIN")) {
+                WorldEditMode = true;
+                Thread  t;
+                ClientThread = &t;
+                ChatLog("World edit mode is activated!");
+            }
+        }
     }
 
     void Game_Loop() {
@@ -101,7 +110,7 @@ namespace GOTHIC_ENGINE {
         }
 
         PluginState = "KeysPressedChecks";
-        if (!IsPlayerTalkingWithAnybody()) {
+        if (!IsPlayerTalkingWithAnybody() && !WorldEditMode) {
             if (zinput->KeyToggled(StartServerKey) && !ServerThread && !ClientThread) {
                 wchar_t mappedPort[1234];
                 std::wcsncpy(mappedPort, L"UDP", 1234);
@@ -149,6 +158,42 @@ namespace GOTHIC_ENGINE {
                         SyncNpcs[name]->ReinitCoopFriendNpc();
                     }
                 }
+            }
+        }
+
+        if (WorldEditMode) {
+            if (zinput->KeyToggled(StartServerKey)) {
+                if (player->GetObjectName() == "PC_HERO") {
+                    return;
+                }
+
+                auto currentNpc = player;
+                Myself->npc->SetAsPlayer();
+
+                ogame->spawnman->SpawnNpc(currentNpc, currentNpc->GetPositionWorld(), 0.f);
+                ChatLog(string::Combine("%s was added to the world!", string(currentNpc->GetObjectName())));
+            }
+
+            if (zinput->KeyToggled(RevivePlayerKey)) {
+                if (player->GetObjectName() == "PC_HERO") {
+                    return;
+                }
+
+                auto currentNpc = player;
+                Myself->npc->SetAsPlayer();
+
+                ogame->spawnman->DeleteNpc(currentNpc);
+                ogame->GetGameWorld()->RemoveVob(currentNpc);
+
+                ChatLog(string::Combine("%s was removed from the world!", string(currentNpc->GetObjectName())));
+            }
+
+            if (zinput->KeyToggled(ToggleGameLogKey)) {
+                if (player->GetObjectName() == "PC_HERO") {
+                    return;
+                }
+
+                Myself->npc->SetAsPlayer();
             }
         }
 

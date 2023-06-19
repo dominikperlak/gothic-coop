@@ -24,6 +24,7 @@ namespace GOTHIC_ENGINE {
 
     string FriendInstanceId = "ch";
     string MyNickname = "";
+    bool WorldEditMode = false;
 
     int PlayersDamageMultipler = 50;
     int NpcsDamageMultipler = 100;

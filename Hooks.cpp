@@ -342,7 +342,7 @@ namespace GOTHIC_ENGINE {
             return;
         }
 
-        if (zinput->KeyPressed(KEY_F2)) {
+        if (zinput->KeyPressed(KEY_F2) && !WorldEditMode) {
             Ivk_zCModel_StartAni(_this, a, b);
             return;
         }

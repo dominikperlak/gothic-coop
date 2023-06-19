@@ -6,6 +6,10 @@ namespace GOTHIC_ENGINE {
     void ReviveFriendLoop() {
         PluginState = "ReviveFriendLoop";
 
+        if (WorldEditMode) {
+            return;
+        }
+
         if (!ServerThread && !ClientThread) {
             return;
         }
