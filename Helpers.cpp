@@ -88,11 +88,15 @@ namespace GOTHIC_ENGINE {
     }
 
     bool IsPlayerTalkingWithNpc(zCVob* npc) {
+        if (!ogame->GetCameraAI()->GetMode().Compare("CAMMODDIALOG")) {
+            return false;
+        }
+
         if (player->talkOther == npc) {
             return true;
         }
 
-        if (ogame->GetCameraAI()->GetMode().Compare("CAMMODDIALOG") && ogame->GetCameraAI()->targetVobList.GetNum() > 0) {
+        if (ogame->GetCameraAI()->targetVobList.GetNum() > 0) {
             for (int i = 0; i < ogame->GetCameraAI()->targetVobList.GetNum(); i++) {
                 auto vob = ogame->GetCameraAI()->targetVobList[i];
                 if (npc == vob) {
