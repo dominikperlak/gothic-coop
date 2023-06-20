@@ -714,8 +714,10 @@ namespace GOTHIC_ENGINE {
                     UpdateNpcPosition();
                 }
 
-                if (lastHpFromServer != -1 && lastHpFromServer != npc->GetAttribute(NPC_ATR_HITPOINTS) && !npc->IsDead()) {
-                    npc->SetAttribute(NPC_ATR_HITPOINTS, lastHpFromServer);
+                if (lastHpFromServer != -1 && lastHpFromServer != npc->GetAttribute(NPC_ATR_HITPOINTS)) {
+                    if (!npc->IsDead() || IsCoopPlayer(name)) {
+                        npc->SetAttribute(NPC_ATR_HITPOINTS, lastHpFromServer);
+                    }
                 }
 
                 if (lastWeaponMode != -1 && lastWeaponMode != npc->GetWeaponMode()) {
