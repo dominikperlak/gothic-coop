@@ -84,7 +84,7 @@ namespace GOTHIC_ENGINE {
     }
 
     bool IsPlayerTalkingWithAnybody() {
-        return player->talkOther || ogame->GetCameraAI()->GetMode().Compare("CAMMODDIALOG");
+        return ogame->GetCameraAI()->GetMode().Compare("CAMMODDIALOG");
     }
 
     bool IsPlayerTalkingWithNpc(zCVob* npc) {
