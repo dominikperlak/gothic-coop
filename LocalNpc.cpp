@@ -137,7 +137,7 @@ namespace GOTHIC_ENGINE {
 
         void SyncAngle() {
             float currentHeading = GetHeading(npc);
-            if (abs(currentHeading - lastHeading) > 5)
+            if (abs(currentHeading - lastHeading) > 3)
             {
                 addUpdate(SYNC_HEADING);
                 lastHeading = currentHeading;

@@ -725,11 +725,8 @@ namespace GOTHIC_ENGINE {
                 }
 
                 if (lastHeadingFromServer != -1) {
-                    float currentHeading = GetHeading(npc);
-                    if (abs(currentHeading - lastHeadingFromServer) > 5) {
-                        npc->ResetRotationsWorld();
-                        npc->RotateWorldY(lastHeadingFromServer);
-                    }
+                    npc->ResetRotationsWorld();
+                    npc->RotateWorldY(lastHeadingFromServer);
                 }
 
                 if (IsCoopPlayer(name)) {
