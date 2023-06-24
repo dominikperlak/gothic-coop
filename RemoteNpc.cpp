@@ -737,6 +737,18 @@ namespace GOTHIC_ENGINE {
         }
 
         void UpdateNpcPosition() {
+            auto currentPosition = npc->GetPositionWorld();
+            auto dist = (int)(*lastPositionFromServer - currentPosition).LengthApprox();
+            auto pos = *lastPositionFromServer;
+
+            if (dist < 200) {
+                npc->SetCollDet(FALSE);
+                npc->SetPositionWorld(pos);
+                npc->SetCollDet(TRUE);
+
+                return;
+            }
+
             bool inMove = npc->isInMovementMode;
             if (inMove) {
 #if ENGINE >= Engine_G2
@@ -746,8 +758,9 @@ namespace GOTHIC_ENGINE {
 #endif
             }
 
-            auto pos = *lastPositionFromServer;
+            npc->SetCollDet(FALSE);
             npc->trafoObjToWorld.SetTranslation(pos);
+            npc->SetCollDet(TRUE);
 
             if (inMove) {
                 npc->BeginMovement();
