@@ -605,7 +605,11 @@ namespace GOTHIC_ENGINE {
                             targetNpc->OnDamage(targetNpc, player, COOP_MAGIC_NUMBER, damageMode, targetNpc->GetPositionWorld());
                         }
 
-                        lastHpFromServer = -1;
+                        if (SyncNpcs.count(target.c_str()) > 0) {
+                            auto syncedKilledNpc = SyncNpcs[target.c_str()];
+                            syncedKilledNpc->lastHpFromServer = -1;
+                        }
+
                         targetNpc->SetAttribute(NPC_ATR_HITPOINTS, 0);
                     }
                 }
