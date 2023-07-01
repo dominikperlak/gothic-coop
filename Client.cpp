@@ -53,8 +53,8 @@ namespace GOTHIC_ENGINE {
                     auto rawJson = ReadyToSendJsons.dequeue();
                     auto bjson = json::to_bson(rawJson);
 
-                    ENetPacket* packet = enet_packet_create(&bjson[0], bjson.size(), ENET_PACKET_FLAG_RELIABLE);
-                    enet_peer_send(peer, 0, packet);
+                    ENetPacket* packet = enet_packet_create(&bjson[0], bjson.size(), PacketFlag(rawJson));
+                    enet_peer_send(peer, PacketChannel(rawJson), packet);
                 }
             }
             catch (std::exception& ex) {

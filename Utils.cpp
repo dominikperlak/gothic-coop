@@ -223,4 +223,26 @@ namespace GOTHIC_ENGINE {
 		player->GetHomeWorld()->bspTree.bspRoot->CollectVobsInBBox3D(vobList, box);
 		return vobList;
 	}
+
+	ENetPacketFlag PacketFlag(json packet)
+	{
+		auto updateType = (UpdateType)packet["type"].get<int>();
+
+		if (updateType == SYNC_POS || updateType == SYNC_HEADING) {
+			return ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT;
+		}
+
+		return ENET_PACKET_FLAG_RELIABLE;
+	}
+
+	int PacketChannel(json packet)
+	{
+		auto updateType = (UpdateType)packet["type"].get<int>();
+
+		if (updateType == SYNC_POS || updateType == SYNC_HEADING) {
+			return 1;
+		}
+
+		return 0;
+	}
 }

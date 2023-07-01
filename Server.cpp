@@ -43,8 +43,8 @@ namespace GOTHIC_ENGINE {
                         if (!player->name.Compare(playerId.c_str())) {
                             auto bson = json::to_bson(jsonPacket);
 
-                            ENetPacket* packet = enet_packet_create(&bson[0], bson.size(), ENET_PACKET_FLAG_RELIABLE);
-                            enet_peer_send(peer, 0, packet);
+                            ENetPacket* packet = enet_packet_create(&bson[0], bson.size(), PacketFlag(jsonPacket));
+                            enet_peer_send(peer, PacketChannel(jsonPacket), packet);
                         }
                     }
                 }
@@ -53,8 +53,8 @@ namespace GOTHIC_ENGINE {
                     auto rawJson = ReadyToSendJsons.dequeue();
                     auto bson = json::to_bson(rawJson);
 
-                    ENetPacket* packet = enet_packet_create(&bson[0], bson.size(), ENET_PACKET_FLAG_RELIABLE);
-                    enet_host_broadcast(server, 0, packet);
+                    ENetPacket* packet = enet_packet_create(&bson[0], bson.size(), PacketFlag(rawJson));
+                    enet_host_broadcast(server, PacketChannel(rawJson), packet);
                 }
             }
             catch (std::exception& ex) {
