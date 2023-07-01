@@ -65,7 +65,7 @@ namespace GOTHIC_ENGINE {
                 this->SyncWeapons();
                 this->SyncProtection();
                 this->SyncTalents();
-                this->SyncHand();
+                //this->SyncHand();
 
                 if (ServerThread) {
                     if (CurrentMs > lastTimeSyncTime + 60000) {

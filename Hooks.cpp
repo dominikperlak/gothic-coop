@@ -135,10 +135,6 @@ namespace GOTHIC_ENGINE {
         ReadyToSyncDamages.enqueue(hit);
 
         Ivk_oCNpc_OnDamage_Sound(_this, damdesc);
-
-        if (ServerThread && PlayerNpcs.count(_this)) {
-            _this->SetAttribute(NPC_ATR_HITPOINTS, LastHpBeforeDamage);
-        }
     }
 
     void __fastcall oCNpc_EV_AttackFinish(oCNpc*, void*, oCMsgAttack*);
@@ -553,7 +549,9 @@ namespace GOTHIC_ENGINE {
         if (_this && vob && IsCoopPlayer(_this->GetObjectName())) {
             if (auto pItem = vob->CastTo<oCItem>())
             {
-                pItem->RemoveVobFromWorld();
+                if (!pItem->GetObjectName().StartWith("RX_DROPPED_ITEM_")) {
+                    pItem->RemoveVobFromWorld();
+                }
             }
         }
 
