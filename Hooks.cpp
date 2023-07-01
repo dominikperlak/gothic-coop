@@ -543,9 +543,20 @@ namespace GOTHIC_ENGINE {
                 Myself->pItemDropped = pItem;
                 Myself->itemDropReady = true;
                 Myself->SyncOnDropItem();
+
+                return Ivk_oCNpc_DoDropVob(_this, vob);
             }
         }
 
-        return Ivk_oCNpc_DoDropVob(_this, vob);
+        auto dropResult = Ivk_oCNpc_DoDropVob(_this, vob);
+
+        if (_this && vob && IsCoopPlayer(_this->GetObjectName())) {
+            if (auto pItem = vob->CastTo<oCItem>())
+            {
+                pItem->RemoveVobFromWorld();
+            }
+        }
+
+        return dropResult;
     }
 }
