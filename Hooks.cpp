@@ -29,7 +29,11 @@ namespace GOTHIC_ENGINE {
         }
 #endif
         // Blocking animations on clients for NPC is not preventing attacking sometimes (so do not call unless attack from the coop engine)
-        if (ClientThread && damdesc.pNpcAttacker != player && (_this == player || IsCoopPlayer(_this->GetObjectName())) && damdesc.fDamageTotal != COOP_MAGIC_NUMBER) {
+        if (ClientThread && 
+            damdesc.pNpcAttacker != player && 
+            (_this == player || IsCoopPlayer(_this->GetObjectName())) && 
+            damdesc.fDamageTotal != COOP_MAGIC_NUMBER &&
+            damdesc.enuModeDamage != oETypeDamage::oEDamageType_Fall) {
             return;
         }
 
