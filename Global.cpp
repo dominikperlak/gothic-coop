@@ -1,5 +1,5 @@
 namespace GOTHIC_ENGINE {
-    const int COOP_VERSION = 52;
+    const int COOP_VERSION = 53;
     const int COOP_MAGIC_NUMBER = 1337;
     int BROADCAST_DISTANCE = 4500;
 
@@ -21,6 +21,7 @@ namespace GOTHIC_ENGINE {
     long long LastUpdateListOfVisibleNpcs = 0;
     long long LastNpcListRefreshTime = 0;
     zVEC3* CurrentWorldTOTPosition;
+    int CurrentPing = -1;
 
     string FriendInstanceId = "ch";
     string MyNickname = "";

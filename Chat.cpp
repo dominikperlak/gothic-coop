@@ -29,7 +29,7 @@
                 zSTRING font = screen->GetFontName();
                 zCOLOR color = zCOLOR(255, 255, 255, 255);
                 screen->SetFont(zSTRING("Font_Old_10_White_Hi.TGA"));
-                int lineDistance = 50;
+                int lineDistance = 150;
 
                 for (unsigned int i = 0; i < lines.size(); i++)
                 {

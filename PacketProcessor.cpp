@@ -15,6 +15,30 @@ namespace GOTHIC_ENGINE {
             return;
         }
 
+        if (type == SYNC_PING && ServerThread) {
+            auto startMs = e["startMs"].get<long long>();
+            json j;
+            j["id"] = "HOST";
+            j["type"] = SYNC_PING;
+            j["player"] = id;
+            j["startMs"] = startMs;
+            ReadyToSendJsons.enqueue(j);
+
+            return;
+        }
+
+        if (type == SYNC_PING && ClientThread) {
+            string playerId = e["player"].get<std::string>().c_str();
+
+            if (playerId.Compare(MyselfId)) {
+                auto startMs = e["startMs"].get<long long>();
+                auto currentMs = GetCurrentMs();
+                CurrentPing = (currentMs - startMs) / 2.0;
+            }
+
+            return;
+        }
+
         if (type == PLAYER_DISCONNECT) {
             string name = e["name"].get<std::string>().c_str();
             ChatLog(string::Combine("%s disconnected.", name));
@@ -90,8 +114,11 @@ namespace GOTHIC_ENGINE {
 
             auto j = json::from_bson(bytesVector);
             j["id"] = player->name.ToChar();
-            ReadyToBeDistributedPackets.enqueue(j);
 
+            auto type = j["type"].get<int>();
+            if (type != SYNC_PING) {
+                ReadyToBeDistributedPackets.enqueue(j);
+            }
             ProcessCoopPacket(j, packet);
             SaveNetworkPacket(j.dump(-1, ' ', false, json::error_handler_t::ignore).c_str());
             break;

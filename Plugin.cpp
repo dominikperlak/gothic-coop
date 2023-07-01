@@ -107,6 +107,19 @@ namespace GOTHIC_ENGINE {
                     SyncNpcs.erase(pair.first);
                 }
             }
+
+            PluginState = "DisplayPing";
+            if (ClientThread && CurrentPing > 0) {
+                auto font = screen->GetFontName();
+                auto color = screen->fontColor;
+
+                screen->SetFont(zSTRING("Font_Old_10_White_Hi.TGA"));
+                screen->SetFontColor(CurrentPing > 100 ? GFX_RED : GFX_WHITE);
+                screen->Print(50, 0, "Ping: " + Z CurrentPing);
+
+                screen->SetFont(font);
+                screen->SetColor(color);
+            }
         }
 
         PluginState = "KeysPressedChecks";
