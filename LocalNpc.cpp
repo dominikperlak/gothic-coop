@@ -48,7 +48,7 @@ namespace GOTHIC_ENGINE {
             hasModel = npc && npc->GetModel() && npc->vobLeafList.GetNum() > 0;
  
             this->SyncInitialization();
-            this->SyncBodystate();
+            //this->SyncBodystate();
             this->SyncPosition();
             this->SyncAngle();
             this->SyncOverlays();
