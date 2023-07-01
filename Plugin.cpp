@@ -43,7 +43,9 @@ namespace GOTHIC_ENGINE {
         PlayersDamageMultipler = CoopConfig["playersDamageMultipler"].get<int>();
         NpcsDamageMultipler = CoopConfig["npcsDamageMultipler"].get<int>();
         if (CoopConfig.contains("friendInstanceId")) {
-            FriendInstanceId = string(CoopConfig["friendInstanceId"].get<std::string>().c_str()).ToChar();
+            auto stdStringFriendInstanceId = CoopConfig["friendInstanceId"].get<std::string>();
+            std::transform(stdStringFriendInstanceId.begin(), stdStringFriendInstanceId.end(), stdStringFriendInstanceId.begin(), ::tolower);
+            FriendInstanceId = string(stdStringFriendInstanceId.c_str()).ToChar();
         }
         if (CoopConfig.contains("nickname")) {
             MyNickname = string(CoopConfig["nickname"].get<std::string>().c_str()).ToChar();
