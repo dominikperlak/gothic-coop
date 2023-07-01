@@ -135,6 +135,10 @@ namespace GOTHIC_ENGINE {
         ReadyToSyncDamages.enqueue(hit);
 
         Ivk_oCNpc_OnDamage_Sound(_this, damdesc);
+
+        if (ServerThread && PlayerNpcs.count(_this)) {
+            _this->SetAttribute(NPC_ATR_HITPOINTS, LastHpBeforeDamage);
+        }
     }
 
     void __fastcall oCNpc_EV_AttackFinish(oCNpc*, void*, oCMsgAttack*);
