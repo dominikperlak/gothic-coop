@@ -24,7 +24,6 @@ namespace GOTHIC_ENGINE {
         SYNC_OVERLAYS,
         SYNC_DROPITEM,
         SYNC_TAKEITEM,
-        SYNC_PING
     };
 
     struct PlayerHit

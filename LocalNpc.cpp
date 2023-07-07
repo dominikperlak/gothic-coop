@@ -29,7 +29,6 @@ namespace GOTHIC_ENGINE {
         zSTRING lastRightHandInstanceName;
         zSTRING revivedFriend = "";
         long long lastTimeSyncTime = 0;
-        long long lastTimePinged = 0;
         oCItem* pItemDropped = NULL;
         oCItem* pItemTaken = NULL;
         bool itemDropReady = false;
@@ -71,13 +70,6 @@ namespace GOTHIC_ENGINE {
                     if (CurrentMs > lastTimeSyncTime + 60000) {
                         this->SyncTime();
                         lastTimeSyncTime = CurrentMs;
-                    }
-                }
-
-                if (ClientThread) {
-                    if (CurrentMs > lastTimePinged + 1000) {
-                        this->SyncPing();
-                        lastTimePinged = CurrentMs;
                     }
                 }
             }
@@ -186,10 +178,6 @@ namespace GOTHIC_ENGINE {
             if (hitsToSync.size() > 0) {
                 addUpdate(SYNC_ATTACKS);
             }
-        }
-
-        void SyncPing() {
-            addUpdate(SYNC_PING);
         }
 
         void SyncSpellCasts() {
@@ -502,12 +490,6 @@ namespace GOTHIC_ENGINE {
                 {
                     j["left"] = lastLeftHandInstanceName;
                     j["right"] = lastRightHandInstanceName;
-                    break;
-                }
-                case SYNC_PING:
-                {
-                    auto currentMs = GetCurrentMs();
-                    j["startMs"] = currentMs;
                     break;
                 }
                 case SYNC_TIME:
