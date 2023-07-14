@@ -40,6 +40,18 @@ namespace GOTHIC_ENGINE {
         ReinitPlayersKey = ReadConfigKey("reinitPlayersKey", "KEY_F3");
         RevivePlayerKey = ReadConfigKey("revivePlayerKey", "KEY_F4");
 
+        if (CoopConfig.contains("port")) {
+            Port = CoopConfig["port"].get<int>();
+        }
+
+        if (CoopConfig.contains("bodyTextVarNr")) {
+            MyBodyTextVarNr = CoopConfig["bodyTextVarNr"].get<int>();
+        }
+
+        if (CoopConfig.contains("headVarNr")) {
+            MyHeadVarNr = CoopConfig["headVarNr"].get<int>();
+        }
+
         PlayersDamageMultipler = CoopConfig["playersDamageMultipler"].get<int>();
         NpcsDamageMultipler = CoopConfig["npcsDamageMultipler"].get<int>();
         if (CoopConfig.contains("friendInstanceId")) {
@@ -127,15 +139,17 @@ namespace GOTHIC_ENGINE {
         PluginState = "KeysPressedChecks";
         if (!IsPlayerTalkingWithAnybody() && !WorldEditMode) {
             if (zinput->KeyToggled(StartServerKey) && !ServerThread && !ClientThread) {
-                wchar_t mappedPort[1234];
-                std::wcsncpy(mappedPort, L"UDP", 1234);
-                new MappedPort(1234, mappedPort, mappedPort);
+                wchar_t mappedPort[65535];
+                std::wcsncpy(mappedPort, L"UDP", Port);
+                new MappedPort(Port, mappedPort, mappedPort);
 
                 Thread t;
                 t.Init(&CoopServerThread);
                 t.Detach();
                 ServerThread = &t;
                 MyselfId = "HOST";
+                player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), MyHeadVarNr, 0, -1);
+                player->SetVisual()
             }
 
             if (zinput->KeyToggled(StartConnectionKey) && !ServerThread) {
@@ -149,6 +163,7 @@ namespace GOTHIC_ENGINE {
 
                     ogame->SetTime(ogame->GetWorldTimer()->GetDay(), 12, 00);
                     rtnMan->RestartRoutines();
+                    player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), MyHeadVarNr, 0, -1);
                 }
                 else {
                     if (IsCoopPaused) {
