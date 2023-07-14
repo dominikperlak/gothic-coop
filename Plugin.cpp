@@ -41,7 +41,7 @@ namespace GOTHIC_ENGINE {
         RevivePlayerKey = ReadConfigKey("revivePlayerKey", "KEY_F4");
 
         if (CoopConfig.contains("port")) {
-            Port = CoopConfig["port"].get<int>();
+            ConnectionPort = CoopConfig["port"].get<int>();
         }
 
         if (CoopConfig.contains("bodyTextVarNr")) {
@@ -139,9 +139,9 @@ namespace GOTHIC_ENGINE {
         PluginState = "KeysPressedChecks";
         if (!IsPlayerTalkingWithAnybody() && !WorldEditMode) {
             if (zinput->KeyToggled(StartServerKey) && !ServerThread && !ClientThread) {
-                wchar_t mappedPort[65535];
-                std::wcsncpy(mappedPort, L"UDP", Port);
-                new MappedPort(Port, mappedPort, mappedPort);
+                wchar_t mappedPort[1234];
+                std::wcsncpy(mappedPort, L"UDP", 1234);
+                new MappedPort(ConnectionPort, mappedPort, mappedPort);
 
                 Thread t;
                 t.Init(&CoopServerThread);
@@ -149,7 +149,6 @@ namespace GOTHIC_ENGINE {
                 ServerThread = &t;
                 MyselfId = "HOST";
                 player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), MyHeadVarNr, 0, -1);
-                player->SetVisual()
             }
 
             if (zinput->KeyToggled(StartConnectionKey) && !ServerThread) {
