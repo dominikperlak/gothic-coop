@@ -1,5 +1,5 @@
 namespace GOTHIC_ENGINE {
-    const int COOP_VERSION = 54;
+    const int COOP_VERSION = 55;
     const int COOP_MAGIC_NUMBER = 1337;
     int BROADCAST_DISTANCE = 4500;
 
@@ -35,6 +35,18 @@ namespace GOTHIC_ENGINE {
     int StartConnectionKey;
     int ReinitPlayersKey;
     int RevivePlayerKey;
+
+#if ENGINE >= Engine_G2
+    int MyBodyTextVarNr = 9;
+    int MyHeadVarNr = 18;
+    int DefaultBodyTexColorNr = 0;
+#else
+    int MyBodyTextVarNr = 4;
+    int MyHeadVarNr = 9;
+    int DefaultBodyTexColorNr = 1;
+#endif
+
+    int ConnectionPort = 1234;
 
     static Thread* ServerThread = NULL;
     static Thread* ClientThread = NULL;

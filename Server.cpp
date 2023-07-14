@@ -11,7 +11,7 @@ namespace GOTHIC_ENGINE {
         ENetAddress address;
         ENetHost* server;
         enet_address_set_host(&address, "0.0.0.0");
-        address.port = 1234;
+        address.port = ConnectionPort;
         server = enet_host_create(&address, 32, 2, 0, 0);
         if (server == NULL)
         {
@@ -19,7 +19,7 @@ namespace GOTHIC_ENGINE {
             return EXIT_FAILURE;
         }
 
-        ChatLog(string::Combine("(Server) Ready (v. %i).", COOP_VERSION));
+        ChatLog(string::Combine("(Server) Ready (v. %i, port %i).", COOP_VERSION, address.port));
         while (true) {
             try {
                 ENetEvent event;

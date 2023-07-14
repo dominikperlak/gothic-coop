@@ -21,7 +21,7 @@ namespace GOTHIC_ENGINE {
         ENetPeer* peer;
         auto serverIp = CoopConfig["server"].get<std::string>();
         enet_address_set_host(&address, serverIp.c_str());
-        address.port = 1234;
+        address.port = Port;
         peer = enet_host_connect(client, &address, 2, 0);
         if (peer == NULL)
         {
@@ -29,15 +29,16 @@ namespace GOTHIC_ENGINE {
             return EXIT_FAILURE;
         }
 
-        if (enet_host_service(client, &event, 5000) > 0 &&
-            event.type == ENET_EVENT_TYPE_CONNECT)
+        if (
+            enet_host_service(client, &event, 5000) > 0
+            && event.type == ENET_EVENT_TYPE_CONNECT)
         {
-            ChatLog(string::Combine("Connection to the server %s succeeded (v. %i).", string(serverIp.c_str()), COOP_VERSION));
+            ChatLog(string::Combine("Connection to the server %s succeeded (v. %i, port %i).", string(serverIp.c_str()), COOP_VERSION, address.port));
         }
         else
         {
             enet_peer_reset(peer);
-            ChatLog(string::Combine("Connection to the server %s failed (v. %i).", string(serverIp.c_str()), COOP_VERSION));
+            ChatLog(string::Combine("Connection to the server %s failed (v. %i, port %i).", string(serverIp.c_str()), COOP_VERSION, address.port));
         }
 
         while (true) {
