@@ -91,6 +91,7 @@ namespace GOTHIC_ENGINE {
             auto j = json::from_bson(bytesVector);
             j["id"] = player->name.ToChar();
 
+            ReadyToBeDistributedPackets.enqueue(j);
             ProcessCoopPacket(j, packet);
             SaveNetworkPacket(j.dump(-1, ' ', false, json::error_handler_t::ignore).c_str());
             break;
