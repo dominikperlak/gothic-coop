@@ -40,7 +40,7 @@ build:gothic2_notr:
     
 release:
   stage: release
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  image: release-cli:latest
   when: manual
   needs: [build:gothic1, build:gothic2_notr]
   variables:
