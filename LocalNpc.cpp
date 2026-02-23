@@ -64,7 +64,7 @@ namespace GOTHIC_ENGINE {
                 this->SyncWeapons();
                 this->SyncProtection();
                 this->SyncTalents();
-                this->SyncHand();
+                //this->SyncHand();
 
                 if (ServerThread) {
                     if (CurrentMs > lastTimeSyncTime + 60000) {
@@ -187,15 +187,22 @@ namespace GOTHIC_ENGINE {
         }
 
         void SyncHand() {
-            auto leftHand = npc->GetLeftHand();
-            auto rightHand = npc->GetRightHand();
+            auto leftVob  = npc->GetLeftHand();
+            auto rightVob = npc->GetRightHand();
 
-            auto leftHandInstanceName = leftHand ? leftHand->GetInstanceName() : "NULL";
-            auto rightHandInstanceName = rightHand ? rightHand->GetInstanceName() : "NULL";
+            // GetLeftHand/GetRightHand return oCVob* in G1; cast to oCItem* to
+            // access the amount field.  Gothic does not always call SetLeftHand(NULL)
+            // after a consumable is fully used — it leaves a stale pointer whose
+            // amount has dropped to 0.  Treat amount == 0 as "no item".
+            oCItem* leftItem  = leftVob  ? leftVob->CastTo<oCItem>()  : NULL;
+            oCItem* rightItem = rightVob ? rightVob->CastTo<oCItem>() : NULL;
+
+            zSTRING leftHandInstanceName  = (leftItem  && leftItem->amount  > 0) ? leftItem->GetInstanceName()  : zSTRING("NULL");
+            zSTRING rightHandInstanceName = (rightItem && rightItem->amount > 0) ? rightItem->GetInstanceName() : zSTRING("NULL");
 
             if (!leftHandInstanceName.Compare(lastLeftHandInstanceName) || !lastRightHandInstanceName.Compare(rightHandInstanceName)) {
                 addUpdate(SYNC_HAND);
-                lastLeftHandInstanceName = leftHandInstanceName;
+                lastLeftHandInstanceName  = leftHandInstanceName;
                 lastRightHandInstanceName = rightHandInstanceName;
             }
         }
