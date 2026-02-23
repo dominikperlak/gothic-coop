@@ -389,9 +389,10 @@ namespace GOTHIC_ENGINE {
                     j["x"] = lastPosition.n[0];
                     j["y"] = lastPosition.n[1];
                     j["z"] = lastPosition.n[2];
-                    if (CoopConfig.contains("textureG1") && CoopConfig["textureG1"].get<std::string>() == "Custom") {
+                    if (CoopConfig.contains("Appearance") && CoopConfig["Appearance"].get<std::string>() == "Custom") {
                         j["bodyTextVarNr"] = MyBodyTextVarNr;
                         j["headVarNr"] = MyHeadVarNr;
+                        j["headModel"] = MyHeadModel;
                     }
                     break;
                 }

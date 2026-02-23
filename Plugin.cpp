@@ -44,13 +44,22 @@ namespace GOTHIC_ENGINE {
             ConnectionPort = CoopConfig["port"].get<int>();
         }
 
-        //if (CoopConfig.contains("bodyTextVarNr")) {
-        //    MyBodyTextVarNr = CoopConfig["bodyTextVarNr"].get<int>();
-        //}
+        if (CoopConfig.contains("bodyTextVarNr")) {
+            MyBodyTextVarNr = CoopConfig["bodyTextVarNr"].get<int>();
+        }
 
-        //if (CoopConfig.contains("headVarNr")) {
-        //    MyHeadVarNr = CoopConfig["headVarNr"].get<int>();
-        //}
+        if (CoopConfig.contains("headVarNr")) {
+            MyHeadVarNr = CoopConfig["headVarNr"].get<int>();
+        }
+
+        if (CoopConfig.contains("headModel")) {
+            MyHeadModel = CoopConfig["headModel"].get<std::string>();
+        }
+
+        // Set Appearance with default value "Custom" if not specified
+        if (!CoopConfig.contains("Appearance")) {
+            CoopConfig["Appearance"] = "Custom";
+        }
 
         PlayersDamageMultipler = CoopConfig["playersDamageMultipler"].get<int>();
         NpcsDamageMultipler = CoopConfig["npcsDamageMultipler"].get<int>();
@@ -148,7 +157,17 @@ namespace GOTHIC_ENGINE {
                 t.Detach();
                 ServerThread = &t;
                 MyselfId = "HOST";
-                player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), MyHeadVarNr, 0, -1);
+                // Apply appearance based on Appearance setting
+                if (CoopConfig.contains("Appearance") && CoopConfig["Appearance"].get<std::string>() == "Custom") {
+                    player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING(MyHeadModel.c_str()), MyHeadVarNr, 0, -1);
+                } else {
+                    // Use default appearance values
+#if ENGINE >= Engine_G2
+                    player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), 9, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), 18, 0, -1);
+#else
+                    player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), 4, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), 9, 0, -1);
+#endif
+                }
             }
 
             if (zinput->KeyToggled(StartConnectionKey) && !ServerThread) {
@@ -162,7 +181,17 @@ namespace GOTHIC_ENGINE {
 
                     ogame->SetTime(ogame->GetWorldTimer()->GetDay(), 12, 00);
                     rtnMan->RestartRoutines();
-                    player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), MyHeadVarNr, 0, -1);
+                    // Apply appearance based on Appearance setting
+                    if (CoopConfig.contains("Appearance") && CoopConfig["Appearance"].get<std::string>() == "Custom") {
+                        player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING(MyHeadModel.c_str()), MyHeadVarNr, 0, -1);
+                    } else {
+                        // Use default appearance values
+#if ENGINE >= Engine_G2
+                        player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), 9, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), 18, 0, -1);
+#else
+                        player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), 4, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), 9, 0, -1);
+#endif
+                    }
                 }
                 else if (IsClientConnected) {
                     if (IsCoopPaused) {
