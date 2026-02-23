@@ -64,7 +64,7 @@ namespace GOTHIC_ENGINE {
                 this->SyncWeapons();
                 this->SyncProtection();
                 this->SyncTalents();
-                //this->SyncHand();
+                this->SyncHand();
 
                 if (ServerThread) {
                     if (CurrentMs > lastTimeSyncTime + 60000) {
@@ -389,8 +389,10 @@ namespace GOTHIC_ENGINE {
                     j["x"] = lastPosition.n[0];
                     j["y"] = lastPosition.n[1];
                     j["z"] = lastPosition.n[2];
-                    //j["bodyTextVarNr"] = MyBodyTextVarNr;
-                    //j["headVarNr"] = MyHeadVarNr;
+                    if (CoopConfig.contains("textureG1") && CoopConfig["textureG1"].get<std::string>() == "Custom") {
+                        j["bodyTextVarNr"] = MyBodyTextVarNr;
+                        j["headVarNr"] = MyHeadVarNr;
+                    }
                     break;
                 }
                 case SYNC_POS:

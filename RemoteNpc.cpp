@@ -24,6 +24,8 @@ namespace GOTHIC_ENGINE {
         zSTRING lastSpellInstanceName;
         oCItem* spellItem;
         std::map<oCVob*, bool> syncedNpcItems;
+        oCItem* trackedLeftHandItem = NULL;
+        oCItem* trackedRightHandItem = NULL;
 
         RemoteNpc(string playerName) {
             name = playerName;
@@ -400,12 +402,16 @@ namespace GOTHIC_ENGINE {
             auto leftItem = update["left"].get<std::string>();
             auto rightItem = update["right"].get<std::string>();
 
-            auto leftHandItem = npc->GetLeftHand();
-            if (leftHandItem)
-            {
-                npc->DoDropVob(leftHandItem);
-                leftHandItem->RemoveVobFromWorld();
-                syncedNpcItems.erase(leftHandItem);
+            // --- Left hand ---
+            // Use our tracked pointer instead of GetLeftHand() — after
+            // DoPutInInventory+SetLeftHand the engine may not return the item
+            // back from GetLeftHand(), causing the clear path to be skipped.
+            if (trackedLeftHandItem) {
+                syncedNpcItems.erase(trackedLeftHandItem);
+                npc->SetLeftHand(NULL);
+                npc->DoRemoveFromInventory(trackedLeftHandItem);
+                trackedLeftHandItem->RemoveVobFromWorld();
+                trackedLeftHandItem = NULL;
             }
 
             if (leftItem != "NULL") {
@@ -413,18 +419,25 @@ namespace GOTHIC_ENGINE {
                 if (insIndex > 0) {
                     auto newItem = CreateCoopItem(insIndex);
                     if (newItem) {
-                        syncedNpcItems[newItem] = true;
+                        // DoPutInInventory removes the item from world space so it
+                        // won't float at its spawn position when SetLeftHand is called.
+                        // Torches use the same path — the overlay sync (HUMANS_NEWTORCH.MDS)
+                        // handles raising the arm correctly.
+                        npc->DoPutInInventory(newItem);
                         npc->SetLeftHand(newItem);
+                        trackedLeftHandItem = newItem;
+                        syncedNpcItems[newItem] = true;
                     }
                 }
             }
 
-            auto rightHandItem = npc->GetRightHand();
-            if (rightHandItem)
-            {
-                npc->DoDropVob(rightHandItem);
-                rightHandItem->RemoveVobFromWorld();
-                syncedNpcItems.erase(rightHandItem);
+            // --- Right hand ---
+            if (trackedRightHandItem) {
+                syncedNpcItems.erase(trackedRightHandItem);
+                npc->SetRightHand(NULL);
+                npc->DoRemoveFromInventory(trackedRightHandItem);
+                trackedRightHandItem->RemoveVobFromWorld();
+                trackedRightHandItem = NULL;
             }
 
             if (rightItem != "NULL") {
@@ -432,8 +445,10 @@ namespace GOTHIC_ENGINE {
                 if (insIndex > 0) {
                     auto newItem = CreateCoopItem(insIndex);
                     if (newItem) {
-                        syncedNpcItems[newItem] = true;
+                        npc->DoPutInInventory(newItem);
                         npc->SetRightHand(newItem);
+                        trackedRightHandItem = newItem;
+                        syncedNpcItems[newItem] = true;
                     }
                 }
             }
@@ -788,6 +803,8 @@ namespace GOTHIC_ENGINE {
                 PlayerNameToNpc.erase(name);
                 ogame->spawnman->DeleteNpc(npc);
                 npc = NULL;
+                trackedLeftHandItem = NULL;
+                trackedRightHandItem = NULL;
                 InitCoopFriendNpc();
             }
         }
@@ -816,7 +833,7 @@ namespace GOTHIC_ENGINE {
             npc->idx = 69133769;
 
             //npc->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), playerBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), playerHeadVarNr, 0, -1);
-            npc->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), MyHeadVarNr, 0, -1);
+            npc->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING(MyHeadModel.c_str()), MyHeadVarNr, 0, -1);
 
 #if ENGINE >= Engine_G2
             npc->SetHitChance(1, 100);

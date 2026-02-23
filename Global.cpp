@@ -45,6 +45,7 @@ namespace GOTHIC_ENGINE {
     int MyHeadVarNr = 9;
     int DefaultBodyTexColorNr = 1;
 #endif
+    std::string MyHeadModel = "HUM_HEAD_PONY";
 
     int ConnectionPort = 1234;
 
