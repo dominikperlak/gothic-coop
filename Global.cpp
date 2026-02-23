@@ -1,5 +1,5 @@
 namespace GOTHIC_ENGINE {
-    const int COOP_VERSION = 60;
+    const int COOP_VERSION = 70;
     const int COOP_MAGIC_NUMBER = 1337;
     int BROADCAST_DISTANCE = 4500;
 
@@ -50,6 +50,7 @@ namespace GOTHIC_ENGINE {
 
     static Thread* ServerThread = NULL;
     static Thread* ClientThread = NULL;
+    static bool IsClientConnected = false;
 
     std::map<string, LocalNpc*> BroadcastNpcs;
     std::map<string, RemoteNpc*> SyncNpcs;

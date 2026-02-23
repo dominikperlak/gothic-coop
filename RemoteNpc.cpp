@@ -4,8 +4,8 @@ namespace GOTHIC_ENGINE {
     public:
         string name;
         string playerNickname = "";
-        int playerHeadVarNr;
-        int playerBodyTextVarNr;
+        //int playerHeadVarNr;
+        //int playerBodyTextVarNr;
         oCNpc* npc = NULL;
         bool destroyed = false;
         bool isSpawned = false;
@@ -175,12 +175,12 @@ namespace GOTHIC_ENGINE {
                 auto y = update["y"].get<float>();
                 auto z = update["z"].get<float>();
                 auto nickname = update["nickname"].get<std::string>();
-                auto headNumber = update["headVarNr"].get<int>();
-                auto bodyNumber = update["bodyTextVarNr"].get<int>();
+                //auto headNumber = update["headVarNr"].get<int>();
+                //auto bodyNumber = update["bodyTextVarNr"].get<int>();
 
                 playerNickname = nickname.c_str();
-                playerHeadVarNr = headNumber;
-                playerBodyTextVarNr = bodyNumber;
+                //playerHeadVarNr = headNumber;
+                //playerBodyTextVarNr = bodyNumber;
                 lastPositionFromServer = new zVEC3(x, y, z);
 
                 if (IsCoopPlayer(name)) {
@@ -815,7 +815,8 @@ namespace GOTHIC_ENGINE {
             npc->dontWriteIntoArchive = TRUE;
             npc->idx = 69133769;
 
-            npc->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), playerBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), playerHeadVarNr, 0, -1);
+            //npc->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), playerBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), playerHeadVarNr, 0, -1);
+            npc->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), MyHeadVarNr, 0, -1);
 
 #if ENGINE >= Engine_G2
             npc->SetHitChance(1, 100);

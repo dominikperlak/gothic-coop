@@ -44,13 +44,13 @@ namespace GOTHIC_ENGINE {
             ConnectionPort = CoopConfig["port"].get<int>();
         }
 
-        if (CoopConfig.contains("bodyTextVarNr")) {
-            MyBodyTextVarNr = CoopConfig["bodyTextVarNr"].get<int>();
-        }
+        //if (CoopConfig.contains("bodyTextVarNr")) {
+        //    MyBodyTextVarNr = CoopConfig["bodyTextVarNr"].get<int>();
+        //}
 
-        if (CoopConfig.contains("headVarNr")) {
-            MyHeadVarNr = CoopConfig["headVarNr"].get<int>();
-        }
+        //if (CoopConfig.contains("headVarNr")) {
+        //    MyHeadVarNr = CoopConfig["headVarNr"].get<int>();
+        //}
 
         PlayersDamageMultipler = CoopConfig["playersDamageMultipler"].get<int>();
         NpcsDamageMultipler = CoopConfig["npcsDamageMultipler"].get<int>();
@@ -164,7 +164,7 @@ namespace GOTHIC_ENGINE {
                     rtnMan->RestartRoutines();
                     player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), MyHeadVarNr, 0, -1);
                 }
-                else {
+                else if (IsClientConnected) {
                     if (IsCoopPaused) {
                         ChatLog("Restoring world synchronization.");
                     }

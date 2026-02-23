@@ -135,7 +135,9 @@ namespace GOTHIC_ENGINE {
         }
         case ENET_EVENT_TYPE_DISCONNECT:
         {
-            ChatLog("Connection to the server lost.");
+            IsClientConnected = false;
+            ClientThread = NULL;
+            ChatLog("Connection to the server lost. Press F2 to reconnect.");
             break;
         }
         }

@@ -1,9 +1,12 @@
 namespace GOTHIC_ENGINE {
     int CoopClientThread()
     {
+        IsClientConnected = false;
+
         if (enet_initialize() != 0)
         {
             ChatLog("An error occurred while initializing ENet.");
+            ClientThread = NULL;
             return EXIT_FAILURE;
         }
         atexit(enet_deinitialize);
@@ -13,6 +16,7 @@ namespace GOTHIC_ENGINE {
         if (client == NULL)
         {
             ChatLog("An error occurred while trying to create an ENet client host.");
+            ClientThread = NULL;
             return EXIT_FAILURE;
         }
 
@@ -26,6 +30,7 @@ namespace GOTHIC_ENGINE {
         if (peer == NULL)
         {
             ChatLog("No available peers for initiating an ENet connection.");
+            ClientThread = NULL;
             return EXIT_FAILURE;
         }
 
@@ -33,11 +38,14 @@ namespace GOTHIC_ENGINE {
             enet_host_service(client, &event, 5000) > 0
             && event.type == ENET_EVENT_TYPE_CONNECT)
         {
+            IsClientConnected = true;
             ChatLog(string::Combine("Connection to the server %s succeeded (v. %i, port %i).", string(serverIp.c_str()), COOP_VERSION, address.port));
         }
         else
         {
             enet_peer_reset(peer);
+            IsClientConnected = false;
+            ClientThread = NULL;
             ChatLog(string::Combine("Connection to the server %s failed (v. %i, port %i).", string(serverIp.c_str()), COOP_VERSION, address.port));
         }
 
@@ -59,10 +67,14 @@ namespace GOTHIC_ENGINE {
                 }
             }
             catch (std::exception& ex) {
+                IsClientConnected = false;
+                ClientThread = NULL;
                 Message::Error(ex.what(), "Client Thread Exception");
                 return EXIT_FAILURE;
             }
             catch (...) {
+                IsClientConnected = false;
+                ClientThread = NULL;
                 Message::Error("Caught unknown exception in client thread!");
                 return EXIT_FAILURE;
             }
