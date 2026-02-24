@@ -201,13 +201,21 @@ namespace GOTHIC_ENGINE {
             return Ivk_oCAIHuman_StandActions(_this);
         }
 
-        auto activeAnims = GetCurrentAni(focusedNpc);
-        for (auto ani : activeAnims) {
-            focusedNpc->GetModel()->StopAnimation(ani->aniName);
+        // Don't interrupt NPCs while dialog is active or being initiated.
+        // KillMessages/ClearEM was destroying the pending talk event before the NPC
+        // could process it, so clients could never start a conversation.
+        if (IsPlayerTalkingWithAnybody()) {
+            return Ivk_oCAIHuman_StandActions(_this);
         }
 
-        focusedNpc->GetEM()->KillMessages();
-        focusedNpc->ClearEM();
+        auto activeAnims = GetCurrentAni(focusedNpc);
+        for (auto ani : activeAnims) {
+            // Preserve T_LOOK so the NPC can turn to face the player when
+            // initiating dialog (T_WALKTURNL/R are already excluded by GetCurrentAni).
+            if (ani->aniName != "T_LOOK") {
+                focusedNpc->GetModel()->StopAnimation(ani->aniName);
+            }
+        }
 
         return Ivk_oCAIHuman_StandActions(_this);
     }
