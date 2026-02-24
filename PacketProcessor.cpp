@@ -23,6 +23,12 @@ namespace GOTHIC_ENGINE {
             return;
         }
 
+        if (type == SYNC_CHAT) {
+            std::string text = e["text"].get<std::string>();
+            ChatLog(string(text.c_str()));
+            return;
+        }
+
         if (IsCoopPaused) {
             return;
         }

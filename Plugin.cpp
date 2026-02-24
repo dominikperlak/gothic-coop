@@ -326,7 +326,13 @@ namespace GOTHIC_ENGINE {
                     if (!message.empty()) {
                         std::string full = sender + ": " + message;
                         ChatLog(string(full.c_str()));
-                        // TODO: send message to network here
+                        if (ServerThread || ClientThread) {
+                            json j;
+                            j["id"] = MyselfId.ToChar();
+                            j["type"] = SYNC_CHAT;
+                            j["text"] = full;
+                            ReadyToSendJsons.enqueue(j);
+                        }
                     }
 
                     // Exit typing mode: restore camera and mouse
