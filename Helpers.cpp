@@ -5,8 +5,8 @@ namespace GOTHIC_ENGINE {
         CoopLog << l;
     }
 
-    void ChatLog(string text, zCOLOR color = zCOLOR(255, 255, 255, 255)) {
-        GameChat->AddLine(text, color);
+    void ChatLog(string text, zCOLOR color = zCOLOR(255, 255, 255, 255), bool isSystem = true) {
+        GameChat->AddLine(text, color, isSystem);
     };
 
     int GetFreePlayerId() {

@@ -25,7 +25,7 @@ namespace GOTHIC_ENGINE {
 
         if (type == SYNC_CHAT) {
             std::string text = e["text"].get<std::string>();
-            ChatLog(string(text.c_str()));
+            ChatLog(string(text.c_str()), zCOLOR(255, 255, 255, 255), false);
             return;
         }
 

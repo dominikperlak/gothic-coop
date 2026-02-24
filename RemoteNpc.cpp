@@ -289,12 +289,10 @@ namespace GOTHIC_ENGINE {
             auto hpMax = update["hp_max"].get<int>();
 
             if (!IsCoopPlayer(name) && hp == 0) {
-                if (hasNpc) {
-                    if (!npc->IsDead() && KilledByPlayerNpcNames.count(name) == 0) {
-                        npc->SetAttribute(NPC_ATR_HITPOINTS, 1);
-                    } else {
-                        npc->SetAttribute(NPC_ATR_HITPOINTS, 0);
-                    }
+                if (hasNpc && !npc->IsDead()) {
+                    npc->SetAttribute(NPC_ATR_HITPOINTS, 1);
+                    npc->OnDamage(npc, player, COOP_MAGIC_NUMBER, 0, npc->GetPositionWorld());
+                    npc->SetAttribute(NPC_ATR_HITPOINTS, 0);
                 }
                 lastHpFromServer = -1;
                 return;
@@ -653,10 +651,12 @@ namespace GOTHIC_ENGINE {
                         }
                     }
                     else {
-                        targetNpc->SetAttribute(NPC_ATR_HITPOINTS, 1);
+                        if (!targetNpc->IsDead()) {
+                            targetNpc->SetAttribute(NPC_ATR_HITPOINTS, 1);
 
-                        if (IsCoopPlayer(npc->GetObjectName()) || npc->aiscriptvars[AIV_PARTYMEMBER] == True) {
-                            targetNpc->OnDamage(targetNpc, player, COOP_MAGIC_NUMBER, damageMode, targetNpc->GetPositionWorld());
+                            if (IsCoopPlayer(npc->GetObjectName()) || npc->aiscriptvars[AIV_PARTYMEMBER] == True) {
+                                targetNpc->OnDamage(targetNpc, player, COOP_MAGIC_NUMBER, damageMode, targetNpc->GetPositionWorld());
+                            }
                         }
 
                         if (SyncNpcs.count(target.c_str()) > 0) {

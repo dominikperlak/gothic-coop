@@ -150,7 +150,7 @@ namespace GOTHIC_ENGINE {
 
                 screen->SetFont(zSTRING("Font_Old_10_White_Hi.TGA"));
                 screen->SetFontColor(CurrentPing > 100 ? GFX_RED : GFX_WHITE);
-                screen->Print(50, 0, "Ping: " + Z CurrentPing);
+                screen->Print(screen->vsizex - 700, 0, "Ping: " + Z CurrentPing);
 
                 screen->SetFont(font);
                 screen->SetColor(color);
@@ -325,7 +325,7 @@ namespace GOTHIC_ENGINE {
                     std::string message = ChatInputBufferStd;
                     if (!message.empty()) {
                         std::string full = sender + ": " + message;
-                        ChatLog(string(full.c_str()));
+                        ChatLog(string(full.c_str()), zCOLOR(255, 255, 255, 255), false);
                         if (ServerThread || ClientThread) {
                             json j;
                             j["id"] = MyselfId.ToChar();

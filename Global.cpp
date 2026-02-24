@@ -23,7 +23,7 @@ namespace GOTHIC_ENGINE {
     zVEC3* CurrentWorldTOTPosition;
     int CurrentPing = -1;
 
-    string FriendInstanceId = "ch";
+    string FriendInstanceId = "pc_coop";
     string MyNickname = "";
     bool WorldEditMode = false;
 
