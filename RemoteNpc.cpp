@@ -16,6 +16,8 @@ namespace GOTHIC_ENGINE {
 
         zVEC3* lastPositionFromServer = NULL;
         float lastHeadingFromServer = -1;
+        float currentLerpedHeading = -1;
+        float lastAppliedHeading = -1;
         int lastHpFromServer = -1;
         int lastMaxHpFromServer = -1;
         int lastWeaponMode = -1;
@@ -249,10 +251,7 @@ namespace GOTHIC_ENGINE {
         void UpdateAngle(json update) {
             auto h = update["h"].get<float>();
             lastHeadingFromServer = h;
-            if (hasModel) {
-                npc->ResetRotationsWorld();
-                npc->RotateWorldY(h);
-            }
+            // Applied once in UpdateNpcBasedOnLastDataFromServer when the value changes
         }
 
         void UpdateAnimation(json update) {
@@ -783,8 +782,27 @@ namespace GOTHIC_ENGINE {
                 }
 
                 if (lastHeadingFromServer != -1) {
-                    npc->ResetRotationsWorld();
-                    npc->RotateWorldY(lastHeadingFromServer);
+                    if (currentLerpedHeading < 0) {
+                        currentLerpedHeading = lastHeadingFromServer;
+                    } else {
+                        float diff = lastHeadingFromServer - currentLerpedHeading;
+                        while (diff >  180.0f) diff -= 360.0f;
+                        while (diff < -180.0f) diff += 360.0f;
+                        currentLerpedHeading += diff * 0.25f;
+                        if (currentLerpedHeading <    0.0f) currentLerpedHeading += 360.0f;
+                        if (currentLerpedHeading >= 360.0f) currentLerpedHeading -= 360.0f;
+                    }
+
+                    // Only reset world rotation when the lerped heading moved >= 2 degrees
+                    // to avoid calling ResetRotationsWorld every frame on tiny sub-degree steps
+                    float applyDiff = currentLerpedHeading - lastAppliedHeading;
+                    if (applyDiff >  180.0f) applyDiff -= 360.0f;
+                    if (applyDiff < -180.0f) applyDiff += 360.0f;
+                    if (lastAppliedHeading < 0 || fabsf(applyDiff) >= 2.0f) {
+                        npc->ResetRotationsWorld();
+                        npc->RotateWorldY(currentLerpedHeading);
+                        lastAppliedHeading = currentLerpedHeading;
+                    }
                 }
 
                 if (IsCoopPlayer(name)) {
@@ -800,8 +818,14 @@ namespace GOTHIC_ENGINE {
             auto pos = *lastPositionFromServer;
 
             if (dist < 200) {
+                float lerpFactor = (dist < 5) ? 1.0f : 0.2f;
+                zVEC3 lerpedPos;
+                lerpedPos.n[0] = currentPosition.n[0] + (pos.n[0] - currentPosition.n[0]) * lerpFactor;
+                lerpedPos.n[1] = currentPosition.n[1] + (pos.n[1] - currentPosition.n[1]) * lerpFactor;
+                lerpedPos.n[2] = currentPosition.n[2] + (pos.n[2] - currentPosition.n[2]) * lerpFactor;
+
                 npc->SetCollDet(FALSE);
-                npc->SetPositionWorld(pos);
+                npc->SetPositionWorld(lerpedPos);
                 npc->SetCollDet(TRUE);
 
                 return;
@@ -838,6 +862,8 @@ namespace GOTHIC_ENGINE {
                 npc = NULL;
                 trackedLeftHandItem = NULL;
                 trackedRightHandItem = NULL;
+                currentLerpedHeading = -1;
+                lastAppliedHeading = -1;
                 InitCoopFriendNpc();
             }
         }
