@@ -39,6 +39,7 @@ namespace GOTHIC_ENGINE {
         StartConnectionKey = ReadConfigKey("startConnectionKey", "KEY_F2");
         ReinitPlayersKey = ReadConfigKey("reinitPlayersKey", "KEY_F3");
         RevivePlayerKey = ReadConfigKey("revivePlayerKey", "KEY_F4");
+        ChatKey = ReadConfigKey("chatKey", "KEY_T");
 
         if (CoopConfig.contains("port")) {
             ConnectionPort = CoopConfig["port"].get<int>();
@@ -90,6 +91,17 @@ namespace GOTHIC_ENGINE {
 
         CurrentMs = GetCurrentMs();
         GameChat->Render();
+
+        // Render chat input line when typing
+        if (IsTyping) {
+            auto prevFont = screen->GetFontName();
+            auto prevColor = screen->fontColor;
+            screen->SetFont(zSTRING("Font_Old_10_White_Hi.TGA"));
+            screen->SetFontColor(GFX_WHITE);
+            screen->Print(50, 30, zSTRING(string::Combine("> %s", string(ChatInputBufferStd.c_str()))));
+            screen->SetFont(prevFont);
+            screen->SetColor(prevColor);
+        }
         GameStatsLoop();
         PacketProcessorLoop();
         DamageProcessorLoop();
@@ -216,6 +228,115 @@ namespace GOTHIC_ENGINE {
                         SyncNpcs[name]->ReinitCoopFriendNpc();
                     }
                 }
+            }
+        }
+
+        // Chat typing toggle and capture (T to start typing)
+        if (!WorldEditMode) {
+            if (!IsTyping && !IsPlayerTalkingWithAnybody() && zinput->KeyToggled(ChatKey)) {
+                // Enter typing mode: save camera mode and disable mouse to block clicks
+                PrevCameraMode = ogame->GetCameraAI()->GetMode();
+                PrevMouseDeviceEnabled = zinput->GetDeviceEnabled(zINPUT_MOUSE);
+                ogame->GetCameraAI()->SetMode(zSTRING("CAMMODDIALOG"), ogame->GetCameraAI()->targetVobList);
+                zinput->SetDeviceEnabled(zINPUT_MOUSE, 0);
+                IsTyping = true;
+                ChatOpenedMs = CurrentMs;
+                ChatInputBufferStd.clear();
+                LastTypedChar = 0;
+                LastTypedCharMs = 0;
+                zinput->ClearKeyBuffer(); // flush chat-open key press from char buffer
+            }
+
+            if (IsTyping) {
+                // Prevent character movement while chat is open – reset every frame before the engine sees them
+                zinput->ResetRepeatKey(KEY_UP);
+                zinput->ResetRepeatKey(KEY_DOWN);
+                zinput->ResetRepeatKey(KEY_LEFT);
+                zinput->ResetRepeatKey(KEY_RIGHT);
+                zinput->ResetRepeatKey(KEY_UPARROW);
+                zinput->ResetRepeatKey(KEY_DOWNARROW);
+                zinput->ResetRepeatKey(KEY_LEFTARROW);
+                zinput->ResetRepeatKey(KEY_RIGHTARROW);
+                zinput->ResetRepeatKey(KEY_LCONTROL);
+                zinput->ResetRepeatKey(KEY_RCONTROL);
+                // KEY_LSHIFT / KEY_RSHIFT intentionally NOT reset – needed for uppercase detection below
+
+                // During the startup delay: drain the buffer every frame so nothing accumulates
+                if (CurrentMs - ChatOpenedMs < ChatInputStartDelayMs) {
+                    zinput->ClearKeyBuffer();
+                }
+                else
+                {
+
+                // Read all characters from input buffer (handles localization/shift) and build message
+                unsigned char ch = zinput->GetChar();
+                bool submitted = false;
+                while (ch) {
+                    long long now = GetCurrentMs();
+
+                    // Debounce identical characters happening too quickly
+                    if (ch == LastTypedChar && (now - LastTypedCharMs) < ChatCharRepeatDelayMs) {
+                        ch = zinput->GetChar();
+                        continue;
+                    }
+
+                    // Accept and record this character
+                    LastTypedChar = ch;
+                    LastTypedCharMs = now;
+
+                    if (ch == 13) { // Enter
+                        submitted = true;
+                        break;
+                    }
+                    else if (ch == 27) { // Escape
+                        ChatInputBufferStd.clear();
+                        IsTyping = false;
+                        ogame->GetCameraAI()->SetMode(PrevCameraMode, ogame->GetCameraAI()->targetVobList);
+                        zinput->SetDeviceEnabled(zINPUT_MOUSE, PrevMouseDeviceEnabled);
+                        break;
+                    }
+                    else if (ch == 8) { // Backspace
+                        if (!ChatInputBufferStd.empty()) ChatInputBufferStd.pop_back();
+                    }
+                    else if (ch >= 32 && ch < 127) { // printable ASCII (skip 127+ ghost values from modifier keys)
+                        if (ChatInputBufferStd.size() < ChatInputMaxLength) {
+                            // Apply Shift and CapsLock for letter keys (GetChar returns lowercase only)
+                            if (ch >= 'a' && ch <= 'z') {
+                                bool shifted  = zinput->KeyPressed(KEY_LSHIFT) || zinput->KeyPressed(KEY_RSHIFT);
+                                bool capsLock = (GetKeyState(VK_CAPITAL) & 0x0001) != 0;
+                                if (shifted ^ capsLock) ch = ch - 'a' + 'A';
+                            }
+                            ChatInputBufferStd.push_back((char)ch);
+                        }
+                    }
+
+                    ch = zinput->GetChar();
+                }
+
+                // Clear key states to avoid other systems reacting to these presses
+                zinput->ClearKeyBuffer();
+                for (int k = KEY_A; k <= KEY_Z; ++k) zinput->ResetRepeatKey(k);
+                for (int k = KEY_1; k <= KEY_0; ++k) zinput->ResetRepeatKey(k);
+                zinput->ResetRepeatKey(KEY_SPACE);
+
+                if (submitted) {
+                    std::string sender = "";
+                    if (MyNickname.Length() > 0) sender = MyNickname.ToChar(); else sender = MyselfId.ToChar();
+                    std::string message = ChatInputBufferStd;
+                    if (!message.empty()) {
+                        std::string full = sender + ": " + message;
+                        ChatLog(string(full.c_str()));
+                        // TODO: send message to network here
+                    }
+
+                    // Exit typing mode: restore camera and mouse
+                    IsTyping = false;
+                    ChatInputBufferStd.clear();
+                    ogame->GetCameraAI()->SetMode(PrevCameraMode, ogame->GetCameraAI()->targetVobList);
+                    zinput->SetDeviceEnabled(zINPUT_MOUSE, PrevMouseDeviceEnabled);
+                }
+
+                } // end delay else
             }
         }
 

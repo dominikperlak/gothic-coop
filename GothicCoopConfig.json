@@ -9,6 +9,7 @@
 	"startConnectionKey": "KEY_F2",
 	"reinitPlayersKey": "KEY_F3",
 	"revivePlayerKey": "KEY_F4",
+	"chatKey": "KEY_T",
 	"friendInstanceId": "CH",
 	"Appearance":"Default",
 	"bodyTextVarNr": 3,

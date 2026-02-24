@@ -27,6 +27,18 @@ namespace GOTHIC_ENGINE {
     string MyNickname = "";
     bool WorldEditMode = false;
 
+    // Chat input state
+    bool IsTyping = false;
+    std::string ChatInputBufferStd = "";
+    const unsigned int ChatInputMaxLength = 256;
+    zSTRING PrevCameraMode = zSTRING("");
+    int PrevMouseDeviceEnabled = 1;
+    unsigned char LastTypedChar = 0;
+    long long LastTypedCharMs = 0;
+    const int ChatCharRepeatDelayMs = 150;
+    const long long ChatInputStartDelayMs = 500;
+    long long ChatOpenedMs = 0;
+
     int PlayersDamageMultipler = 50;
     int NpcsDamageMultipler = 100;
     int ToggleGameLogKey;
@@ -35,6 +47,7 @@ namespace GOTHIC_ENGINE {
     int StartConnectionKey;
     int ReinitPlayersKey;
     int RevivePlayerKey;
+    int ChatKey;
 
 #if ENGINE >= Engine_G2
     int MyBodyTextVarNr = 9;
