@@ -47,6 +47,9 @@ namespace GOTHIC_ENGINE {
             else if (UniqueNameToNpcList.count(id.c_str())) {
                 npcToSync = addSyncedNpc(id.c_str());
             }
+            else if (type == INIT_NPC && e.contains("spawned") && e["spawned"].get<bool>()) {
+                npcToSync = addSyncedNpc(id.c_str());
+            }
         }
 
         if (npcToSync) {

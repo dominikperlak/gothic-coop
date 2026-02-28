@@ -413,6 +413,15 @@ namespace GOTHIC_ENGINE {
     void LoadEnd() {
         if (ServerThread || ClientThread) {
             Myself = new LocalNpc(player, MyselfId);
+            if (CoopConfig.contains("Appearance") && CoopConfig["Appearance"].get<std::string>() == "Custom") {
+                player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), MyBodyTextVarNr, DefaultBodyTexColorNr, zSTRING(MyHeadModel.c_str()), MyHeadVarNr, 0, -1);
+            } else {
+#if ENGINE >= Engine_G2
+                player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), 9, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), 18, 0, -1);
+#else
+                player->SetAdditionalVisuals(zSTRING("hum_body_Naked0"), 4, DefaultBodyTexColorNr, zSTRING("HUM_HEAD_PONY"), 9, 0, -1);
+#endif
+            }
         }
 
         std::map<string, RemoteNpc*> syncPlayerNpcs;

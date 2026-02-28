@@ -45,7 +45,7 @@ namespace GOTHIC_ENGINE {
             }
 
             hasModel = npc && npc->GetModel() && npc->vobLeafList.GetNum() > 0;
- 
+
             this->SyncInitialization();
             //this->SyncBodystate();
             this->SyncPosition();
@@ -396,6 +396,9 @@ namespace GOTHIC_ENGINE {
                     j["x"] = lastPosition.n[0];
                     j["y"] = lastPosition.n[1];
                     j["z"] = lastPosition.n[2];
+                    if (std::string(name.ToChar()).find("DYNAMIC") != std::string::npos) {
+                        j["spawned"] = true;
+                    }
                     if (CoopConfig.contains("Appearance") && CoopConfig["Appearance"].get<std::string>() == "Custom") {
                         j["bodyTextVarNr"] = MyBodyTextVarNr;
                         j["headVarNr"] = MyHeadVarNr;

@@ -245,6 +245,20 @@ namespace GOTHIC_ENGINE {
             return;
         }
 
+        if (ClientThread && castingNpc == player) {
+            int spellId = book->GetSelectedSpellNr();
+            if (spellId >= 0) {
+                oCItem* item = book->GetSpellItem(spellId);
+                if (item) {
+                    auto itemNameStr = std::string(item->GetInstanceName().ToChar());
+                    if (itemNameStr.find("SUMMON") != std::string::npos ||
+                        itemNameStr.find("summon") != std::string::npos) {
+                        return;
+                    }
+                }
+            }
+        }
+
         if (IsCoopPlayer(castingNpc->GetObjectName())) {
             int spellID = book->GetSelectedSpellNr();
             if (spellID >= 0)
@@ -318,6 +332,12 @@ namespace GOTHIC_ENGINE {
             if (npc && !IsCoopPlayer(npc->GetObjectName())) {
                 if (NpcToUniqueNameList.count(npc) > 0) {
                     auto uniqueName = NpcToUniqueNameList[npc];
+                    if (ServerThread && std::string(uniqueName.ToChar()).find("DYNAMIC") != std::string::npos) {
+                        json j;
+                        j["type"] = DESTROY_NPC;
+                        j["id"] = uniqueName.ToChar();
+                        ReadyToSendJsons.enqueue(j);
+                    }
                     if (BroadcastNpcs.count(uniqueName) > 0) {
                         auto player = BroadcastNpcs[uniqueName];
                         if (player) {
