@@ -227,6 +227,24 @@ namespace GOTHIC_ENGINE {
                 else if (npc) {
                     ogame->spawnman->InsertNpc(npc, *lastPositionFromServer);
                 }
+                else if (update.contains("spawned") && update["spawned"].get<bool>()) {
+                    auto instanceId = update["instanceId"].get<int>();
+                    if (instanceId > 0) {
+                        npc = dynamic_cast<oCNpc*>(
+                            ogame->GetGameWorld()->CreateVob(zTVobType::zVOB_TYPE_NSC, instanceId));
+                        if (npc) {
+                            ogame->spawnman->InsertNpc(npc, *lastPositionFromServer);
+                            npc->dontWriteIntoArchive = TRUE;
+                            npc->UseStandAI();
+                            static int AIV_PARTYMEMBER = GetPartyMemberID();
+                            npc->aiscriptvars[AIV_PARTYMEMBER] = True;
+                            UniqueNameToNpcList[name] = npc;
+                            NpcToUniqueNameList[npc] = name;
+                            isSpawned = true;
+                            UpdateHasNpcAndHasModel();
+                        }
+                    }
+                }
             }
         }
 
@@ -758,7 +776,11 @@ namespace GOTHIC_ENGINE {
             if (npc != NULL) {
                 PlayerNpcs.erase(npc);
                 PlayerNameToNpc.erase(name);
-
+                if (NpcToUniqueNameList.count(npc) > 0) {
+                    auto uname = NpcToUniqueNameList[npc];
+                    UniqueNameToNpcList.erase(uname);
+                    NpcToUniqueNameList.erase(npc);
+                }
                 ogame->spawnman->DeleteNpc(npc);
                 destroyed = true;
                 npc = NULL;
@@ -985,6 +1007,13 @@ namespace GOTHIC_ENGINE {
                         InitCoopFriendNpc();
                         isSpawned = true;
                     }
+                }
+                else if (isSpawned && dist > BROADCAST_DISTANCE * 1.5) {
+                    UniqueNameToNpcList.erase(name);
+                    NpcToUniqueNameList.erase(npc);
+                    ogame->spawnman->DeleteNpc(npc);
+                    destroyed = true;
+                    return;
                 }
                 else if (dist > BROADCAST_DISTANCE * 1.5) {
                     destroyed = true;

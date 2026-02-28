@@ -181,6 +181,13 @@ namespace GOTHIC_ENGINE {
             UniqueNameToNpcList[uniqueName] = npc;
             NpcToUniqueNameList[npc] = uniqueName;
 
+            if (!firstRun) {
+                auto summonedGuild = npc->GetGuild();
+                for (auto playerNpcPair : PlayerNpcs) {
+                    playerNpcPair.first->SetGuild(summonedGuild);
+                }
+            }
+
             list = list->next;
         }
     }
