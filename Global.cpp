@@ -1,5 +1,5 @@
 namespace GOTHIC_ENGINE {
-    const int COOP_VERSION = 70;
+    const int COOP_VERSION = 71;
     const int COOP_MAGIC_NUMBER = 1337;
     int BROADCAST_DISTANCE = 4500;
 
@@ -79,6 +79,8 @@ namespace GOTHIC_ENGINE {
     static std::map<string, oCNpc*> PlayerNameToNpc;
 
     static std::map<string, oCNpc*> KilledByPlayerNpcNames;
+
+    static std::map<oCNpc*, int> OriginalPlayerGuilds;
 
     static SafeQueue<json> ReadyToSendJsons;
     static SafeQueue<json> ReadyToBeDistributedPackets;

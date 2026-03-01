@@ -182,6 +182,11 @@ namespace GOTHIC_ENGINE {
             NpcToUniqueNameList[npc] = uniqueName;
 
             if (!firstRun) {
+                if (OriginalPlayerGuilds.empty()) {
+                    for (auto& playerNpcPair : PlayerNpcs) {
+                        OriginalPlayerGuilds[playerNpcPair.first] = playerNpcPair.first->GetGuild();
+                    }
+                }
                 auto summonedGuild = npc->GetGuild();
                 for (auto playerNpcPair : PlayerNpcs) {
                     playerNpcPair.first->SetGuild(summonedGuild);
@@ -189,6 +194,27 @@ namespace GOTHIC_ENGINE {
             }
 
             list = list->next;
+        }
+
+        if (!OriginalPlayerGuilds.empty()) {
+            bool anyAliveSummon = false;
+            for (auto entry : UniqueNameToNpcList) {
+                auto entryName = entry.first;
+                if (std::string(entryName.ToChar()).find("DYNAMIC") != std::string::npos) {
+                    if (entry.second && !entry.second->IsDead()) {
+                        anyAliveSummon = true;
+                        break;
+                    }
+                }
+            }
+            if (!anyAliveSummon) {
+                for (auto& saved : OriginalPlayerGuilds) {
+                    if (PlayerNpcs.count(saved.first)) {
+                        saved.first->SetGuild(saved.second);
+                    }
+                }
+                OriginalPlayerGuilds.clear();
+            }
         }
     }
 
